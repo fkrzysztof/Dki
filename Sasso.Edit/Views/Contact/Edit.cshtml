@@ -1,0 +1,100 @@
+﻿@model Sasso.Data.Data.Data.Contact
+@using Sasso.Data.Data.Data
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow">
+            @*<div class="card-header bg-white">
+                    <h5 class="align-items-center">
+                        <i class="bi bi-plus-circle m-2" style="font-size: 1.5rem; color:black;"></i>
+                    </h5>
+                </div>*@
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <form asp-action="Edit">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="ContactID" />
+                            <div class="mb-3">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="NIP" class="control-label"></label>
+                                <input asp-for="NIP" class="form-control" />
+                                <span asp-validation-for="NIP" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="REGON" class="control-label"></label>
+                                <input asp-for="REGON" class="form-control" />
+                                <span asp-validation-for="REGON" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="KRS" class="control-label"></label>
+                                <input asp-for="KRS" class="form-control" />
+                                <span asp-validation-for="KRS" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-md-end my-4">
+                                <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row justify-content-center">
+
+            @if (ViewBag.Address != null)
+                @foreach (var ItemAddresses in ViewBag.Address as List<Address>)
+                {
+                    <div class="col-md-10 mb-4">
+                        <div class="card shadow">
+                            <div class="card-header bg-white">
+                                <h5 class="align-items-center">
+                                   @(ItemAddresses.HeadOffice == true ? "Siedziba główna ": "Oddział ") @ItemAddresses.Name
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 text-right">@ItemAddresses.Street @ItemAddresses.Number</div>
+                                    <div class="col-12 text-right">@ItemAddresses.ZIPCode @ItemAddresses.City</div>
+                                    <div class="col-12 text-right">@ItemAddresses.Country</div>
+                                    <div class="col-12"><hr /></div>
+                                    <div class="col-12 text-left"><span>Telefon(y):</span></div>
+                                    @if (ItemAddresses.Phones != null)
+                                        @foreach (var ItemAddressesPhones in ItemAddresses.Phones)
+                                        {
+                                            <div class="col-12"><span class="float-lg-left">@ItemAddressesPhones.NamePhone</span><span class="float-lg-right">@ItemAddressesPhones.PhoneNumber</span></div>
+                                        }
+                                    <div class="col-12"><hr /></div>
+                                    <div class="col-12 text-left"><span>Adres(y) Email:</span></div>
+                                    @if (ItemAddresses.Emails != null)
+                                        @foreach (var ItemAddressEmail in ItemAddresses.Emails)
+                                        {
+                                            <div class="col-12 text-right">@ItemAddressEmail.EmailAdress</div>
+                                        }
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <a asp-controller="Address" asp-action="Edit" asp-route-id="@ItemAddresses.AddressID"><i class="bi bi-sliders m-3" style="font-size: 1rem; color:black;"></i></a>
+                                        <a asp-controller="Address" asp-action="Delete" asp-route-id="@ItemAddresses.AddressID" class="removeButton" data-id="@ItemAddresses.AddressID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+        </div>
+    </div>
+</div>
+
+

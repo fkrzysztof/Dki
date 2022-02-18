@@ -1,0 +1,33 @@
+﻿<div class="row justify-content-center full-text">
+    <div class="col-12">
+        <h3 class="text-start my-4">
+            @ViewBag.Name
+        </h3>
+    </div>
+    <div class="col-12 mb-0 pb-0 mx-0 px-0">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "News" ? "active" : "")" asp-route-id="@ViewBag.ProjectId" asp-action="News">Aktualności</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "About" ? "active" : "")" asp-route-id="@ViewBag.ProjectId"  asp-action="About">O Projecie</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Participants" ? "active" : "")" asp-route-id="@ViewBag.ProjectId"  asp-action="Participants">Uczestnicy</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "FormOfSupport" ? "active" : "")" asp-route-id="@ViewBag.ProjectId"  asp-action="FormOfSupport">Formy wsparcia</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Recruitment" ? "active" : "")" asp-route-id="@ViewBag.ProjectId"  asp-action="Recruitment">Rekrutacja</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Contact" ? "active" : "")" asp-route-id="@ViewBag.ProjectId"  asp-action="Contact">Kontakt</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-12 rounded rounded-bottom border-top-0 mb-5 bg-white pt-4 shadow pb-4 text-start">
+        @Html.Raw(ViewBag.Project)
+    </div>
+</div>

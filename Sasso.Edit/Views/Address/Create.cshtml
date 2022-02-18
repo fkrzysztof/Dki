@@ -1,0 +1,112 @@
+﻿@model Sasso.Data.Data.Data.Address
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <form asp-action="Create">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-row form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="HeadOffice" /> @Html.DisplayNameFor(model => model.HeadOffice)
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Country" class="control-label"></label>
+                    <input asp-for="Country" class="form-control" />
+                    <span asp-validation-for="Country" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="City" class="control-label"></label>
+                    <input asp-for="City" class="form-control" />
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Street" class="control-label"></label>
+                    <input asp-for="Street" class="form-control" />
+                    <span asp-validation-for="Street" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Number" class="control-label"></label>
+                    <input asp-for="Number" class="form-control" />
+                    <span asp-validation-for="Number" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ZIPCode" class="control-label"></label>
+                    <input asp-for="ZIPCode" class="form-control" />
+                    <span asp-validation-for="ZIPCode" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div id="emailRow">
+                    <div class="mb-3 email">
+                        <label asp-for="@Model.Emails.First().EmailAdress" class="control-label"></label>
+                        <input name="_emailAdress[]" class="form-control" />
+                        <span asp-validation-for="@Model.Emails.First().EmailAdress" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="mb-3 text-md-right">
+                    <button type="button" id="addEmail" class="btn btn-sm btn-primary">dodaj kolejny..</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="phoneRow">
+                    <div class="row phone">
+                        <div class="mb-3 col-md-6">
+                            <label asp-for="@Model.Phones.First().NamePhone" class="control-label"></label>
+                            @*<input asp-for="@Model.Phones.First().NamePhone" class="form-control" />*@
+                            <input name="_namePhone[]" class="form-control" />
+                            <span asp-validation-for="@Model.Phones.First().NamePhone" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label asp-for="@Model.Phones.First().PhoneNumber" class="control-label"></label>
+                            <input name="_phoneNumber[]" class="form-control" />
+                            <span asp-validation-for="@Model.Phones.First().PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3 text-md-right">
+                            <button type="button" id="addPhone" class="btn btn-sm btn-primary">dodaj kolejny..</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3 d-flex justify-content-md-end my-4">
+                    <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+                </div>
+            </div>
+        </div>
+    </form>
+
+<script>
+
+    $("#addPhone").on("click", function (e) {
+        e.preventDefault();
+        $(".phone:first").clone().appendTo("#phoneRow");
+    });
+    $("#addEmail").on("click", function (e) {
+        e.preventDefault();
+        $(".email:first").clone().appendTo("#emailRow");
+    });
+
+</script>

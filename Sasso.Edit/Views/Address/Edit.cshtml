@@ -1,0 +1,164 @@
+﻿@model Sasso.Data.Data.Data.Address
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="Edit">
+    <input type="hidden" asp-for="AddressID" />
+    <div class="row">
+        <div class="col-12">
+            <div class="row form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="HeadOffice" /> @Html.DisplayNameFor(model => model.HeadOffice)
+                </label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Country" class="control-label"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label asp-for="Street" class="control-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ZIPCode" class="control-label"></label>
+                <input asp-for="ZIPCode" class="form-control" />
+                <span asp-validation-for="ZIPCode" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div id="emailRow">
+                @if (Model.Emails.Count == 0)
+                {
+                    <div class="email">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="mb-3">
+                                    <label asp-for="@Model.Emails.First().EmailAdress" class="control-label"></label>
+                                    <input name="_emailAdress[]" value="" class="form-control emailAddress" />
+                                    <span asp-validation-for="@Model.Emails.First().EmailAdress" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @foreach (var item in Model.Emails)
+                {
+                    <div class="email">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="mb-3">
+                                    <label asp-for="@Model.Emails.First().EmailAdress" class="control-label"></label>
+                                    <input name="_emailAdress[]" value="@item.EmailAdress" class="form-control emailAddress" />
+                                    <span asp-validation-for="@Model.Emails.First().EmailAdress" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center d-flex justify-content-center">
+                                <a href="#" class="cutEmail"><i class="bi bi-x-circle" style="color:red; font-size:1.5rem;"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3 text-md-right">
+                        <button type="button" id="addEmail" class="btn btn-sm btn-primary">dodaj kolejny..</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+
+
+            <div id="phoneRow">
+                @if (Model.Phones.Count == 0)
+                {
+                    <div class="phone">
+                        <div class="row">
+
+                            <div class="mb-3 col-md-5">
+                                <label asp-for="@Model.Phones.First().NamePhone" class="control-label"></label>
+                                <input name="_namePhone[]" value="" class="form-control phoneNameAddress" />
+                                <span asp-validation-for="@Model.Phones.First().NamePhone" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3 col-md-5">
+                                <label asp-for="@Model.Phones.First().PhoneNumber" class="control-label"></label>
+                                <input name="_phoneNumber[]" value="" class="form-control phoneNumberAddress" />
+                                <span asp-validation-for="@Model.Phones.First().PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @foreach (var item in Model.Phones)
+                {
+                    <div class="phone">
+                        <div class="row">
+
+                            <div class="mb-3 col-md-5">
+                                <label asp-for="@Model.Phones.First().NamePhone" class="control-label"></label>
+                                <input name="_namePhone[]" value="@item.NamePhone" class="form-control phoneNameAddress" />
+                                <span asp-validation-for="@Model.Phones.First().NamePhone" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3 col-md-5">
+                                <label asp-for="@Model.Phones.First().PhoneNumber" class="control-label"></label>
+                                <input name="_phoneNumber[]" value="@item.PhoneNumber" class="form-control phoneNumberAddress" />
+                                <span asp-validation-for="@Model.Phones.First().PhoneNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center d-flex justify-content-center">
+                                <a href="#" class="cutPhone"><i class="bi bi-x-circle" style="color:red; font-size:1.5rem;"></i></a>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3 text-md-right">
+                        <button type="button" id="addPhone" class="btn btn-sm btn-primary">dodaj kolejny..</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3 d-flex justify-content-md-end my-4">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/js/mailAndPhoneRemove.js"></script>

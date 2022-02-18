@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Sald.Data.Data.Data.Offer>
+@using Sald.Data.HelperClass
+@using Sasso.Data.Data.Data
+@{
+    Layout = "~/Views/Shared/_LayoutWWW.cshtml";
+    bool side = true;
+    int circle = 1;
+    About about = (About)ViewBag.About;
+}
+
+<section style="position:relative;">
+    @*<div class="bg-circle-2 bg-circle-sald"></div>*@
+    <div class="container px-2 py-5 px-lg-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 p-5 text-big d-flex align-self-start border-right-sald border-bottom-sald">
+                @about.Maintext
+            </div>
+            <div class="col-12 d-none d-sm-block d-lg-none px-5 py-0">
+                <hr />
+            </div>
+            <div class="col-lg-6 p-5 text-big d-flex align-self-start">
+                @Html.Raw(about.Text)
+            </div>
+        </div>
+    </div>
+</section>
+
+@foreach (var item in Model)
+{
+<section style="position:relative;">
+    <div class="bg-circle-@circle bg-circle-sald"></div>
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 @(side == true ? "order-lg-2" : "")">
+                <div class="p-1 p-md-5"><img class="img-fluid rounded-circle" src="@FileAction.GetImg(item.Image)" alt="..." /></div>
+            </div>
+            <div class="col-lg-6 @(side == true ? "order-lg-1" : "")">
+                <div class="p-1 p-md-5 border-0 border-start">
+                    <h2 class="display-4">@item.Name</h2>
+                    <div class="text-standard">@Html.Raw(item.Text)</div>
+                    <a class="link-button d-flex align-items-center mt-3" asp-action="page" asp-controller="Home" asp-route-id="@item.OfferID">
+                        Więciej <i class="fas fa-angle-double-right mx-2" style="color: #c51f41; font-size:2rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    side = !side;
+    if (++circle > 4)
+        circle = 1;
+}

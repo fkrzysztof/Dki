@@ -1,0 +1,77 @@
+﻿@{
+
+    string pageName = ViewContext.RouteData.Values["Controller"].ToString();
+    string action = ViewContext.RouteData.Values["Action"].ToString();
+    string icon = "";
+
+    switch (pageName)
+    {
+
+        case "Contact":
+            icon = "bi bi-phone";
+            break;
+        case "Offer":
+            icon = "bi bi-folder2-open";
+            break;
+        //case "Projects":
+        //    icon = "bi bi-person-video3";
+        //    break;
+        case "About":
+            icon = "bi bi-house";
+            break;
+        case "Address":
+            icon = "bi bi-phone";
+            break;
+        case "Settings":
+            icon = "bi bi-gear";
+            break;
+
+    }
+
+    string pagePL = "";
+
+    switch (pageName)
+    {
+
+        case "Contact":
+            pagePL = "Kontakt";
+            break;
+        case "Offer":
+            pagePL = "Oferta";
+            break;
+        case "Projects":
+            pagePL = "Projekty - Szkolenia";
+            break;
+        case "About":
+            pagePL = "O nas";
+            break;
+        case "Address":
+            pagePL = "Kontakt";
+            break;
+        case "Settings":
+            pagePL = "Ustawienia";
+            break;
+    }
+
+        <div class="row no-gutters">
+            <div class="col-sm-11 text-left">
+                <h2 class="display-6"><i class="@icon m-2" style="font-size: 2.5rem;"></i> @pagePL @(action == "Index" ? "" : " / " + action) </h2>
+            </div>
+            <div class="col-sm-1 d-flex justify-content-between">
+                @{
+                    if (action != "Create" && action != "Edit" && pageName != "About" && pageName != "Settings")
+                    {
+                        <a asp-action="Create"><i id="createButton" class="bi bi-plus-lg" style="font-size:2rem; color:black;"></i></a>
+                    }
+                    if (action != "Index" && pageName != "About")
+                    {
+                        <a href="javascript: history.go(-1)"><i class="bi bi-arrow-90deg-left" style="font-size:2rem; color:black;"></i></a>
+                    }
+                }
+            </div>
+            <div class="col-12">
+                <h6>@ViewBag.Message</h6>
+                <hr />
+            </div>
+        </div>
+}

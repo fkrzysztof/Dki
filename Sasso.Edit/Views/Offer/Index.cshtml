@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Sald.Data.Data.Data.Offer>
+@using Sald.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-4 mb-5 hide-show-item">
+            <div class="card h-100 w-100 shadow">
+                    <img src="@FileAction.GetImg(item.Image)" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <hr>
+                        <p>
+                            @Html.Raw(item.Text)
+                        </p>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <a asp-action="Edit" asp-route-id="@item.OfferID"><i class="bi bi-sliders m-3" style="font-size: 1rem; color:black;"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.OfferID" class="removeButton" data-id="@item.OfferID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+    }
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+

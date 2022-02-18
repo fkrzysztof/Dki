@@ -1,0 +1,141 @@
+﻿@model Sasso.Data.Data.Data.Projects
+@using Sald.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<script src="~/js/nicEdit.js"></script>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProjectsID" />
+    <input type="hidden" asp-for="Image" />
+    <input type="hidden" asp-for="Active" />
+    <div class="row align-items-end">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label class="control-label"></label>
+                <img src="@(FileAction.GetImg(Model.Image))" class="imgPreview img-thumbnail" />
+                <div class="input-group mb-3">
+                    <input type="file" asp-for="FormFileItem" class="form-control newMediaItem" id="customFile">
+                    <label class="input-group-text" for="customFile">Plik</label>
+                </div>
+                <span asp-validation-for="FormFileItem" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StartProject" class="control-label"></label>
+                <input asp-for="StartProject" class="form-control" />
+                <span asp-validation-for="StartProject" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="EndProject" class="control-label"></label>
+                <input asp-for="EndProject" class="form-control" />
+                <span asp-validation-for="EndProject" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Contact" class="control-label"></label>
+                <textarea asp-for="Contact" class="form-control linkAdd" rows="8" cols="3"></textarea>
+                <span asp-validation-for="Contact" class="text-danger"></span>
+            </div>
+            @*@if (Model.Files.Count == 0)
+            {*@
+                <div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @**** Add ****@
+                            <div class="input-group mb-3">
+                                <input type="file" asp-for="Files" class="form-control" multiple>
+                                <span asp-validation-for="Files" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @*}*@
+            @foreach (var item in Model.Files)
+            {
+                //Remove
+                <div class="hide-show-item-file">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="mb-3">
+                                @if (item.Path.Split(".").Last().Equals("pdf", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    <i class="bi bi-file-earmark-pdf mr-1" style="color: red; font-size: 1.4rem;"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-file-earmark-word mr-1" style="color: blue; font-size: 1.4rem;"></i>
+                                }
+                            @*<a href="@("http://www.my.so.hostingasp.pl/Projects/DownloadFileJS/"+item.FileID)"> @item.Path</a>*@
+                            <a asp-action="DownloadFileJS" target="_blank" asp-route-id="@item.FileID">@item.Path</a>
+                            </div>
+                        </div>
+                        <div class="col-3 d-flex align-items-center d-flex justify-content-end">
+                            <a href="#" data-id="@item.FileID" class="removeFile"><i class="bi bi-x-circle" style="color:red; font-size:1.5rem;"></i></a>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="mb-3">
+                <label asp-for="DateOfPublication" class="control-label"></label>
+                <input asp-for="DateOfPublication" class="form-control" />
+                <span asp-validation-for="DateOfPublication" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+
+            <div class="card card-body shadow py-3 my-4">
+                <label asp-for="News" class="control-label h6"></label>
+                <textarea asp-for="News" class="form-control" rows="40"></textarea>
+                <span asp-validation-for="News" class="text-danger"></span>
+            </div>
+            <div class="card card-body shadow py-3 my-4">
+                <label asp-for="About" class="control-label h6"></label>
+                <textarea asp-for="About" class="form-control" rows="40"></textarea>
+                <span asp-validation-for="About" class="text-danger"></span>
+            </div>
+            <div class="card card-body shadow py-3 my-4">
+                <label asp-for="Participants" class="control-label h6"></label>
+                <textarea asp-for="Participants" class="form-control" rows="15"></textarea>
+                <span asp-validation-for="Participants" class="text-danger"></span>
+            </div>
+            <div class="card card-body shadow py-3 my-4">
+                <label asp-for="FormOfSupport" class="control-label h6"></label>
+                <textarea asp-for="FormOfSupport" class="form-control" rows="15"></textarea>
+                <span asp-validation-for="FormOfSupport" class="text-danger"></span>
+            </div>
+            <div class="card card-body shadow py-3 my-4">
+                <label asp-for="Recruitment" class="control-label h6"></label>
+                <textarea asp-for="Recruitment" class="form-control" rows="20"></textarea>
+                <span asp-validation-for="Recruitment" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-12 d-flex justify-content-md-end my-4">
+            <div class="mb-3">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script type="text/javascript">
+    bkLib.onDomLoaded(function () { nicEditors.allTextAreas() });
+</script>
+<script src="~/js/photoPreview.js"></script>
+<script src="~/js/deleteFileJS.js"></script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

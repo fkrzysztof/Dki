@@ -1,0 +1,66 @@
+﻿@model Sald.Data.Data.Data.Offer
+@using Sald.Data.HelperClass
+
+
+<script type="text/javascript">
+    bkLib.onDomLoaded(function () { nicEditors.allTextAreas() });
+</script>
+
+<form asp-action="Edit" enctype="multipart/form-data">
+    <div class="row align-items-md-end">
+        <div class="col-md-6">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OfferID" />
+            <input type="hidden" name="path" value="@ViewBag.OfferImg" />
+            @*<input type="hidden" asp-for="Image" />*@
+            <div class="mb-3">
+                <label class="control-label"></label>
+                <img src="@FileAction.GetImg(Model.Image)" class="imgPreview img-thumbnail " />
+                <div class="input-group mb-3">
+                    <input type="file" asp-for="FormFileItem" class="form-control newMediaItem" id="customFile">
+                    <label class="input-group-text" for="customFile">Plik</label>
+                </div>
+                <span asp-validation-for="FormFileItem" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label asp-for="LinkName" class="control-label"></label>
+                <input asp-for="LinkName" class="form-control" />
+                <span asp-validation-for="LinkName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Text" class="control-label"></label>
+                <textarea asp-for="Text" class="form-control linkAdd" rows="15"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label asp-for="TextMain" class="control-label"></label>
+                <textarea asp-for="TextMain" class="form-control linkAdd" rows="25"></textarea>
+                <span asp-validation-for="TextMain" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+        </div>
+        <div class="col-12  d-flex justify-content-md-end my-4">
+            <div class="mb-3">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script src="~/js/photoPreview.js"></script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

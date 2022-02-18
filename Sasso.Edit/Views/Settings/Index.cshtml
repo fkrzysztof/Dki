@@ -1,0 +1,134 @@
+﻿@model Sald.Data.Data.Data.Settings
+@using Sald.Data.HelperClass
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form asp-action="Edit" asp-controller="Settings" enctype="multipart/form-data">
+    <div class="row align-items-md-end p-5 p-md-2">
+        <div class="col-12 d-flex align-items-center">
+            <h5>
+                <i class="bi bi-building mr-2" style="font-size:1.5rem;"></i>
+                Logo
+            </h5>
+        </div>
+        <div class="col-md-3 pt-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SettingsID" />
+            <input type="hidden" name="path" value="@ViewBag.LogoPath" />
+            <img src="@FileAction.GetImg(Model.Logo)" class="imgPreview img-thumbnail " />
+        </div>
+        <div class="col-md-9">
+            <div>
+                <div class="input-group">
+                    <input type="file" asp-for="LogoForm" class="form-control newMediaItem" id="customFile">
+                    <label class="input-group-text" for="customFile">Plik</label>
+                </div>
+                <span asp-validation-for="LogoForm" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-12  d-flex justify-content-md-end my-4">
+            <div class="mb-3">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<form asp-action="HeadText" asp-controller="Settings">
+    <div class="row  p-5 p-md-2">
+        <div class="col-12 d-flex align-items-center">
+            <h5>
+                <i class="bi bi-megaphone mr-2" style="font-size:1.5rem;"></i>
+                Slogan:
+            </h5>
+        </div>
+        <div class="col-md-12 card card-body shadow pb-0 pt-3 my-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                @*<label asp-for="CookieInfo" class="control-label h6"></label>*@
+                <input asp-for="HeadText" class="form-control" />
+                <span asp-validation-for="HeadText" class="text-danger"></span>
+            </div>
+            <div class="mb-3 d-flex justify-content-end">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+<form asp-action="Cookie" asp-controller="Settings">
+    <div class="row  p-5 p-md-2">
+        <div class="col-12 d-flex align-items-center">
+            <h5>
+                <i class="bi bi-info-circle mr-2" style="font-size:1.5rem;"></i>
+                Informacja o Cookies
+            </h5>
+        </div>
+        <div class="col-md-12 card card-body shadow pb-0 pt-3 my-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                @*<label asp-for="CookieInfo" class="control-label h6"></label>*@
+                <textarea asp-for="CookieInfo" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="CookieInfo" class="text-danger"></span>
+            </div>
+            <div class="mb-3 d-flex justify-content-end">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+
+@*<form asp-action="Edit" asp-controller="Settings" enctype="multipart/form-data">
+        <div class="row align-items-md-end p-5">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SettingsID" />
+
+            <h2 class="mt-5">Tło</h2>
+            <hr />
+            <div class="col-md-3">
+                <div>
+                    <label class="control-label"></label>
+                    <img src="@FileAction.GetImg(null)" class="imgPreview img-thumbnail " />
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="input-group">
+                    <input type="file" asp-for="BackgroundForm" multiple class="form-control newMediaItem" id="customFileNext">
+                    <label class="input-group-text" for="customFileNext">Plik</label>
+                </div>
+                <span asp-validation-for="BackgroundForm" class="text-danger"></span>
+            </div>
+
+            <div class="col-12  d-flex justify-content-md-end my-4">
+                <div class="mb-3">
+                    <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row align-items-md-end px-5">
+        @foreach (var item in Model.Background)
+        {
+            <div class="col-md-3 mb-5 hide-show-background">
+                <img src="@FileAction.GetImg(item)" class="imgPreview img-thumbnail" />
+                <div class="removeButtonBackgroundDiv d-flex justify-content-center align-items-center">
+                    <a asp-action="Delete" asp-controller="Projects" asp-route-id="@item.FileID" title="usuń" class="removeButtonBackground" data-id="@item.FileID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color: #ff0000;"></i></a>
+                </div>
+            </div>
+        }
+    </div>*@
+
+
+
+<script src="~/js/photoPreview.js"></script>
+
+

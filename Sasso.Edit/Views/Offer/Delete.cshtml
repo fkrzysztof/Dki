@@ -1,0 +1,29 @@
+﻿@model Sald.Data.Data.Data.Offer
+@using Sasso.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="col-sm-4 mb-5 project-item">
+        <div class="card h-100 w-100 shadow">
+            @*<img src="@(new CloudAccess().GetImg(Model.MediaItem))" class="card-img-top">*@
+            <div class="card-body">
+                <h5 class="card-title text-center">@Html.DisplayFor(modelItem => Model.Name)</h5>
+                <hr>
+                <p>
+                    @Html.Raw(Model.Text)
+                </p>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <form asp-action="Delete">
+                            <input type="hidden" asp-for="OfferID" />
+                            <input type="submit" value="Delete" class="btn btn-danger btn-lg" />
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
