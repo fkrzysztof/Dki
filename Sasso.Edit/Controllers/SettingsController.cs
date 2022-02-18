@@ -29,7 +29,7 @@ namespace Sald.Edit.Controllers
                 _context.Settings.Add(new Settings() 
                 { 
                     CookieInfo = "Używamy informacji zapisanych za pomocą plików cookies w celu zapewnienia maksymalnej wygody w korzystaniu z naszego serwisu. Mogą też korzystać z nich współpracujące z nami firmy badawcze oraz reklamowe. Jeżeli wyrażasz zgodę na zapisywanie informacji zawartej w cookies kliknij na „x” w prawym górnym rogu tej informacji. Jeśli nie wyrażasz zgody, ustawienia dotyczące plików cookies możesz zmienić w swojej przeglądarce.",
-                    HeadText = "Sald"
+                    HeadText = "Witamy!"
                 });
                 _context.SaveChanges();
             }
@@ -46,46 +46,52 @@ namespace Sald.Edit.Controllers
         // POST: Settings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("SettingsID,LogoForm,BackgroundForm")] Settings settings, string path)
+        public async Task<IActionResult> Edit([Bind("LogoForm,BackgroundForm")] Settings s, string path)
         {
             if (ModelState.IsValid)
             {
+                var settingsDB = await _context.Settings.Include(i=>i.Logo).Include(i=>i.Background).FirstOrDefaultAsync();
+                if (settingsDB == null)
+                    return NotFound();
                 try
                 {
                     #region Logo-MyFile
-                    if(settings.LogoForm != null && path != null)
+                    //change
+                    if(s.LogoForm != null && path != null)
                     {
                         var img = await _context.MyFiles.FirstOrDefaultAsync(f => f.Path == path);
-                        img.Path = FileAction.ChangeFile(path, settings.LogoForm).Path;
+                        img.Tag = "logo";
+                        img.Path = FileAction.ChangeFile(path, s.LogoForm).Path;
                         _context.MyFiles.Update(img);
-                        _context.SaveChanges();
                     }
-                    else if(settings.LogoForm != null)
+                    //new
+                    else if(s.LogoForm != null)
                     {
-                       settings.Logo = FileAction.UploadFiles(settings.LogoForm).Result.FirstOrDefault();
+                        settingsDB.Logo = FileAction.UploadFiles(s.LogoForm).Result.FirstOrDefault();
+                        settingsDB.Logo.Tag = "logo";
                     }
                     #endregion
 
                     #region Background
-                    if(settings.BackgroundForm != null)
+                    if(s.BackgroundForm != null)
                     {
-                        if (settings.Background == null)
-                            settings.Background = new List<MyFile>();
+                        if (settingsDB.Background == null)
+                            settingsDB.Background = new List<MyFile>();
 
-                        foreach (var item in settings.BackgroundForm)
+                        foreach (var item in s.BackgroundForm)
                         {
-                            settings.Background.Add(new MyFile() { Path = FileAction.UploadFiles(item).Result.First().Path });
+                            settingsDB.Background.Add(new MyFile() { Path = FileAction.UploadFiles(item).Result.First().Path });
                         }
                     }
 
                     #endregion
 
-                    _context.Settings.Update(settings);
+                    _context.Settings.Update(settingsDB);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SettingsExists(settings.SettingsID))
+                    if (!SettingsExists(s.SettingsID))
                     {
                         return NotFound();
                     }
@@ -96,7 +102,7 @@ namespace Sald.Edit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(settings);
+            return View(s);
         }
 
 

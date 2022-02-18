@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Sald.Data.HelperClass;
 using Sasso.Data.Data;
 using Sasso.Data.Data.Data;
-using Sasso.Data.HelperClass;
 using Sasso.Edit.Controllers.Abstract;
 
 
@@ -49,7 +46,7 @@ namespace Sasso.Edit.Controllers
                 _context.SaveChanges();
             }
 
-            var projectsList = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+            var projectsList = await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
                                                         DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync();
 
             if (projectsList.Count == 0)
@@ -67,13 +64,13 @@ namespace Sasso.Edit.Controllers
         public async Task<IActionResult> Ended()
         {
             SendHowManyItems();
-            ViewBag.Project = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync();
             return View("Index", await _context.ProjectsPages.FirstAsync());
         }
 
         public async Task<IActionResult> Deleted()
         {
-            ViewBag.Project = await _context.Projects.Where(w => w.Active == false).ToListAsync();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).Where(w => w.Active == false).ToListAsync();
             SendHowManyItems();
             return View("Index", await _context.ProjectsPages.FirstAsync());
         }
@@ -81,11 +78,12 @@ namespace Sasso.Edit.Controllers
         public async Task<IActionResult> All()
         {
             SendHowManyItems();
-            ViewBag.Project = await _context.Projects.ToListAsync();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).ToListAsync();
             return View("Index", await _context.ProjectsPages.FirstAsync());
         }
         #endregion
 
+        //do poprawki !!!!!!!!!!!!!!!!
         #region Preview
 
 
@@ -182,7 +180,7 @@ namespace Sasso.Edit.Controllers
                 return NotFound();
             }
 
-            var projects = await _context.Projects.Include(i => i.Files).FirstAsync(f => f.ProjectsID == id);
+            var projects = await _context.Projects.Include(i => i.Files).Include(i => i.Image).FirstAsync(f => f.ProjectsID == id);
             if (projects == null)
             {
                 return NotFound();
@@ -335,18 +333,26 @@ namespace Sasso.Edit.Controllers
         [HttpPost]
         public bool KillJS(int id)
         {
-            var killIt = _context.Projects.FirstOrDefault(f => f.ProjectsID == id);
+            var killIt = _context.Projects.Include(i => i.Image).Include(i => i.Files).FirstOrDefault(f => f.ProjectsID == id);
             bool output;
             if(killIt != null )
             {
-                //new CloudAccess().Remove(killIt.MediaItem);
-                FileAction.RemoveFile(killIt.Image);
-                _context.RemoveRange(_context.MyFiles.Where(w => w.ProjectsID == id));
+                if(killIt.Image != null)
+                {
+                    //new CloudAccess().Remove(killIt.MediaItem);
+                    FileAction.RemoveFile(killIt.Image);
+                    _context.RemoveRange(_context.MyFiles.Where(w => w.ProjectsID == id));
+                }
+
+                if (killIt.Files != null)
+                {
+                    FileAction.RemoveFile(killIt.Files);
+                }
+
                 var rezult  = _context.Projects.Remove(killIt);
                 output = rezult.State.ToString() == "Deleted";
                 _context.SaveChanges();
                 return output;
-
             }
             return false;
         }
@@ -469,13 +475,13 @@ namespace Sasso.Edit.Controllers
             SendHowManyItems();
 
             if(page == "All")
-                  return View("UpdateProjects", await _context.Projects.ToListAsync());
+                  return View("UpdateProjects", await _context.Projects.Include(i => i.Image).ToListAsync());
             else if (page == "Ended")
-                  return View("UpdateProjects", await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync());
+                  return View("UpdateProjects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync());
             else if (page == "Deleted")
-                  return View("UpdateProjects", await _context.Projects.Where(w => w.Active == false).ToListAsync());
+                  return View("UpdateProjects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == false).ToListAsync());
             else if (page == "Index")
-                  return View("UpdateProjects", await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+                  return View("UpdateProjects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
                                                         DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync());
             else
             return NotFound();

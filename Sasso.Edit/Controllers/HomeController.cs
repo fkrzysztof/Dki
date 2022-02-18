@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,20 @@ namespace Sasso.Edit.Controllers
         public async Task<IActionResult> Index()
         {
             //await sendAsync();
-            //var offer = await _context.Offers.Include(i => i.Image).ToListAsync();
+            //include image ?
+            ViewBag.Offer = await _context.Offers.Include(i => i.Image).ToListAsync();
+            var projects = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+                                            DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync();
+            if(projects.Count() == 0)
+                projects = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync();
+
+            ViewBag.Projects = projects;
+
             //ViewBag.About = await _context.Abouts.FirstAsync();
-            //return View(offer);
+            return View();
 
-            return RedirectToAction("Index","About");
-
+            //return RedirectToAction("Index","About");
+            //return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -41,10 +50,14 @@ namespace Sasso.Edit.Controllers
         }
 
         #region JS
-        [HttpPost]
+        
         public string LogoJS()
         {
-            return _context.Settings.Include(i => i.Logo).FirstOrDefault().Logo.Path;
+            var settings = _context.Settings.Include(i => i.Logo).FirstOrDefault();
+            if (settings != null && settings.Logo != null)
+                return settings.Logo.Path;
+            else
+                return "";
         }
         #endregion
 

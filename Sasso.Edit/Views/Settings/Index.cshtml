@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-3 pt-3">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SettingsID" />
+            @*<input type="hidden" asp-for="SettingsID" />*@
             <input type="hidden" name="path" value="@ViewBag.LogoPath" />
             <img src="@FileAction.GetImg(Model.Logo)" class="imgPreview img-thumbnail " />
         </div>
@@ -49,7 +49,6 @@
         <div class="col-md-12 card card-body shadow pb-0 pt-3 my-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
-                @*<label asp-for="CookieInfo" class="control-label h6"></label>*@
                 <input asp-for="HeadText" class="form-control" />
                 <span asp-validation-for="HeadText" class="text-danger"></span>
             </div>

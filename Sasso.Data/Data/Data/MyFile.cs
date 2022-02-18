@@ -14,7 +14,9 @@ namespace Sasso.Data.Data.Data
         [NotMapped]
         //[RegularExpression(@"([a-zA-Z0-9\s_\\.\-:])+(.doc|.docx|.pdf)$", ErrorMessage = "akceptowalne fomaty to: .doc, .docx, .pdf")]
         public IFormFile FileItem { get; set; }
+        public string Tag { get; set; }
 
+        //******* LINK
         public int? OfferID { get; set; }
         [ForeignKey("OfferID")]
         public Offer Offer { get; set; }

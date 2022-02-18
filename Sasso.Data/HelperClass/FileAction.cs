@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Sasso.Data.Data;
 using Sasso.Data.Data.Data;
 using Sasso.Data.HelperClass;
 using System;
@@ -12,7 +14,6 @@ namespace Sald.Data.HelperClass
 {
     public class FileAction
     {
-
         public static string GetImg(MyFile file)
         {
             if (file == null || string.IsNullOrEmpty(file.Path))
@@ -72,12 +73,20 @@ namespace Sald.Data.HelperClass
 
         public static void RemoveFile(MyFile file)
         {
-            if (file != null || !string.IsNullOrEmpty(file.Path))
+            if (file != null && !string.IsNullOrEmpty(file.Path))
             {
                 if (File.Exists(MyServer.MapPath("") + file.Path))
                 {
                     File.Delete(MyServer.MapPath("") + file.Path);
                 }
+            }
+        }
+
+        public static void RemoveFile(ICollection<MyFile> files)
+        {
+            foreach (var item in files)
+            {
+                RemoveFile(item);
             }
         }
 
@@ -125,6 +134,5 @@ namespace Sald.Data.HelperClass
                 {".csv", "text/csv"}
             };
         }
-
     }
 }
