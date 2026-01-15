@@ -1,0 +1,70 @@
+﻿@model Sasso.Data.Data.Data.Projects
+@using Sald.Data.HelperClass
+@{
+    Layout = "~/Views/Shared/_LayoutWWW.cshtml";
+    string routeName = ViewContext.RouteData.Values["Action"].ToString();
+}
+
+<section>
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-8 order-last order-md-first mt-2 mt-md-5">
+                <div class="row mx-0">
+                    <div class="col-12 px-0 mx-0">
+                        <h2 class="display-6 green-element mb-5 mt-4 mt-md-0"><a asp-controller="Home" asp-action="Projects">Projekty</a><span> / </span>@Model.Name</h2>
+                        <hr />
+                    </div>
+                    @*menu extra*@
+                    <div class="col-12 px-0 mx-0">
+                        <div class="col-sm-12 text-left mt-4">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "News" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="News">Aktualności</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "About" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="About">O Projecie</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "Participants" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="Participants">Uczestnicy</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "FormOfSupport" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="FormOfSupport">Formy wsparcia</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "Recruitment" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="Recruitment">Rekrutacja</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(routeName == "Contact" ? "active" : "")" asp-route-id="@Model.ProjectsID" asp-action="Contact">Kontakt</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-self-start">
+                <div class="p-0 mt-5"><img src="@(FileAction.GetImg(Model.Image))" class="card-img-top"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid px-4 px-lg-5 pt-3">
+        <div class="row">
+            <div class="col-12 rounded rounded-bottom border-top-0 mb-5 bg-white pt-4 pb-4 text-start">
+                @{
+                    if (routeName == "News")
+                        @Html.Raw(Model.News)
+                        else if (routeName == "About")
+                            @Html.Raw(Model.About)
+                            else if (routeName == "Participants")
+                                @Html.Raw(Model.Participants)
+                                else if (routeName == "FormOfSupport")
+                                    @Html.Raw(Model.FormOfSupport)
+                                    else if (routeName == "Recruitment")
+                                        @Html.Raw(Model.Recruitment)
+                                        else if (routeName == "Contact")
+                                            @Html.Raw(Model.Contact)
+
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -5,9 +5,6 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@{
     string actionPage = "";
     if (ViewContext.RouteData.Values["Action"] != null)
     {
@@ -24,6 +21,7 @@
         </div>
     </div>
 </div>
+
 @*CREATE*@
 <div class="row hideElement">
     <div class="col-md-12 card card-body shadow ">
@@ -62,9 +60,6 @@
             </div>
         </div>
     </div>
-
-
-
     <div class="row rounded rounded-bottom border-top-0 mb-5 bg-white pt-4 shadow">
         @foreach (var item in ViewBag.Project as List<Projects>)
         {
@@ -89,14 +84,11 @@
                                 }
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         }
     </div>
-
-
 </section>
 
 <script src="~/js/projects.js"></script>

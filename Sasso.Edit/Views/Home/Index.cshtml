@@ -1,9 +1,43 @@
-﻿@model IEnumerable<Sald.Data.Data.Data.Offer>
-@using Sald.Data.HelperClass
-@using Sasso.Data.Data.Data
+﻿@using Sald.Data.HelperClass
+@using Sald.Data.Data.Data
 @{
     Layout = "~/Views/Shared/_LayoutWWW.cshtml";
 
 }
+
+<!--Offer-->
+<section class="background-black-25">
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row">
+            @foreach (var item in ViewBag.Offer as List<Offer>)
+            {
+                <div class="col-sm-6 p-2 offer d-flex">
+                    <div class="card shadow p-2 p-md-5">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex">
+                                <img class="offer-img" src="@FileAction.GetImg(item.Image)" />
+                            </div>
+                            <h5 class="display-6 my-4">@item.Name</h5>
+                            <p class="card-text">
+                                @Html.Raw(item.Text)
+                            </p>
+                            <a asp-action="Page" asp-route-id="@item.OfferID" class="float-md-end btn btn-outline-dark mt-auto align-self-end mt-auto">Więcej</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="col-sm-6 p-2 d-flex">
+                <div class="card shadow p-5">
+                    <div class="card-body">
+                        <img class="offer-img" src="~/svg/undraw_website_builder_re_ii6e.svg" />
+                        <h5 class="display-6 my-4">Projesty / Szkolenia</h5>
+                        <p class="card-text">Nad realizacją szkoleń, usług doradczych oraz projektów pracuje zespół którego wiedza, kompetencje oraz doświadczenie są gwarancją skuteczności realizacji wyznaczonych celów.</p>
+                        <a asp-action="Projects" asp-controller="Home" class="float-end btn btn-outline-dark mt-auto">Więcej</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 

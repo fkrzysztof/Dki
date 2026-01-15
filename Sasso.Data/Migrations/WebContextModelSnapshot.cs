@@ -219,6 +219,93 @@ namespace Sald.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Sald.Data.Data.Data.Apartment", b =>
+                {
+                    b.Property<int>("ApartmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Balkon")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Garaz")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Klimatyzacja")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("KodPocztowy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Kraj")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LiczbaPieterWBudynku")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LiczbaPokoi")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Metraz")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Miasto")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("MiejsceParkingoweNaZewnatrz")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nazwa")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumerBudynku")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumerMieszkania")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OgrzewaniePodlogowe")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Ogród")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Opis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Pietro")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Piwnica")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Taras")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Telefon1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefon2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Ulica")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WcRazemZLazienka")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Winda")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ApartmentID");
+
+                    b.ToTable("Apartments");
+                });
+
             modelBuilder.Entity("Sald.Data.Data.Data.Offer", b =>
                 {
                     b.Property<int>("OfferID")
@@ -330,11 +417,9 @@ namespace Sald.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("KRS")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NIP")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -342,7 +427,6 @@ namespace Sald.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("REGON")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactID");
@@ -398,6 +482,9 @@ namespace Sald.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("ApartmentID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("BackgroundListID")
                         .HasColumnType("int");
 
@@ -420,6 +507,8 @@ namespace Sald.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FileID");
+
+                    b.HasIndex("ApartmentID");
 
                     b.HasIndex("BackgroundListID");
 
@@ -625,6 +714,10 @@ namespace Sald.Data.Migrations
 
             modelBuilder.Entity("Sasso.Data.Data.Data.MyFile", b =>
                 {
+                    b.HasOne("Sald.Data.Data.Data.Apartment", "Apartment")
+                        .WithMany("Photos")
+                        .HasForeignKey("ApartmentID");
+
                     b.HasOne("Sald.Data.Data.Data.Settings", "BackgroundList")
                         .WithMany("Background")
                         .HasForeignKey("BackgroundListID");
@@ -644,6 +737,8 @@ namespace Sald.Data.Migrations
                     b.HasOne("Sald.Data.Data.Data.Settings", "Logo")
                         .WithOne("Logo")
                         .HasForeignKey("Sasso.Data.Data.Data.MyFile", "SettingsID");
+
+                    b.Navigation("Apartment");
 
                     b.Navigation("BackgroundList");
 
@@ -672,6 +767,11 @@ namespace Sald.Data.Migrations
                         .HasForeignKey("AddressID");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("Sald.Data.Data.Data.Apartment", b =>
+                {
+                    b.Navigation("Photos");
                 });
 
             modelBuilder.Entity("Sald.Data.Data.Data.Offer", b =>

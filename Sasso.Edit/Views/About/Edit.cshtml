@@ -6,27 +6,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <div class="row">
-        <div class="col-md-12 card card-body shadow pb-0 pt-3 my-4">
-            <form asp-action="Edit">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="AboutID" />
-                <div class="mb-3">
-                    <label asp-for="Maintext" class="control-label h6"></label>
-                    <textarea asp-for="Maintext" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Maintext" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Text" class="control-label h6"></label>
-                    <textarea asp-for="Text" class="form-control" rows="4"></textarea>
-                    <span asp-validation-for="Text" class="text-danger"></span>
-                </div>
-                <div class="mb-3 d-flex justify-content-end">
-                    <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
-                </div>
-            </form>
+<div class="row">
+    <div class="col-md-12 pb-0 pt-0 my-2">
+        <div class="alert alert-primary" role="alert">
+            Akapit pojawi się na stronie po wpisaniu treści w pola temat i rozwinięcie.
         </div>
     </div>
+    <div class="col-md-12 card card-body shadow pb-0 pt-3 my-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AboutID" />
+            <div class="mb-3">
+                <label asp-for="Maintext" class="control-label h6"></label>
+                <textarea asp-for="Maintext" class="form-control" rows="1"></textarea>
+                <span asp-validation-for="Maintext" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Text" class="control-label h6"></label>
+                <textarea asp-for="Text" class="form-control" rows="8"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="mb-3 d-flex justify-content-end">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </form>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

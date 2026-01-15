@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Sasso.Data.Data.Data.Projects>
+@using Sald.Data.HelperClass
+
+@{
+    Layout = "~/Views/Shared/_LayoutWWW.cshtml";
+    string actionPage = "";
+    if (ViewContext.RouteData.Values["Action"] != null)
+    {
+        actionPage = ViewContext.RouteData.Values["Action"].ToString();
+    }
+}
+
+<section>
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-8 order-last order-md-first mt-2 mt-md-5">
+                <div class="row mx-0">
+                    <div class="col-12 px-0 mx-0">
+                        <h2 class="display-6 green-element mb-5 mt-4 mt-md-0"><a asp-controller="Home" asp-action="Index">Oferta</a><span> / </span>Projekty</h2>
+                        <hr />
+                        <p class="project-text">@ViewBag.ProjectPageText</p>
+                    </div>
+
+                    <div class="col-12 px-0 mx-0">
+                        <div class="col-sm-12 text-left mt-4">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link @(actionPage == "Index" ? "active" : "")" asp-action="Projects">Aktualne (@ViewBag.Index)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(actionPage == "Ended" ? "active" : "")" asp-action="Ended">Zakończone (@ViewBag.Ended)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(actionPage == "All" ? "active" : "")" asp-action="All">Wszystkie (@ViewBag.All)</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 d-flex align-self-start">
+                <div class="p-0 mt-5"><img class="img-fluid" src="~/svg/undraw_website_builder_re_ii6e.svg" alt="" /></div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid px-4 px-lg-5 pt-3">
+        <div class="row" id="projectsList">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-4 mb-5 project-item">
+                    <div class="card @(item.Active == false ? "bg-light" : "" ) h-100 w-100 shadow-sm">
+                        <img src="@(FileAction.GetImg(item.Image))" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Name)</h5>
+                            <a asp-action="About" asp-route-id="@item.ProjectsID" asp-controller="Home" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section id="projectsSection" data-pageid="@actionPage">
+</section>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

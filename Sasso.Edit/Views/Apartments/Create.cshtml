@@ -1,0 +1,281 @@
+﻿@model Sald.Data.Data.Data.Apartment
+
+@{
+    ViewData["Title"] = "Dodaj Apartament";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" enctype="multipart/form-data" method="post">
+    <div class="row">
+        <!-- ================== Informacje podstawowe ================== -->
+
+        <div class="col-12 mb-3">
+
+            <div class="form-group">
+                <label asp-for="Nazwa"></label>
+                <input asp-for="Nazwa" class="form-control" />
+                <span asp-validation-for="Nazwa" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Opis"></label>
+                <textarea rows="35" asp-for="Opis" class="form-control"></textarea>
+            </div>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <h4>Informacje podstawowe</h4>
+            <div class="form-group">
+                <label asp-for="Pietro"></label>
+                <input asp-for="Pietro" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="LiczbaPieterWBudynku"></label>
+                <input asp-for="LiczbaPieterWBudynku" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Metraz"></label>
+                <input asp-for="Metraz" type="number" step="0.1" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="LiczbaPokoi"></label>
+                <input asp-for="LiczbaPokoi" type="number" class="form-control" />
+            </div>
+        </div>
+
+        <!-- ================== Adres ================== -->
+        <div class="col-md-6 mb-3">
+            <h4>Adres</h4>
+            <div class="form-group">
+                <label asp-for="Ulica"></label>
+                <input asp-for="Ulica" class="form-control" />
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="NumerBudynku"></label>
+                        <input asp-for="NumerBudynku" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="NumerMieszkania"></label>
+                        <input asp-for="NumerMieszkania" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="Miasto"></label>
+                        <input asp-for="Miasto" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="KodPocztowy"></label>
+                        <input asp-for="KodPocztowy" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Kraj"></label>
+                <input asp-for="Kraj" class="form-control" />
+            </div>
+        </div>
+    
+
+        <!-- ================== Udogodnienia ================== -->
+        <div class="col-md-6 mb-3">
+            <h4>Udogodnienia</h4>
+
+            <div class="row mt-3">
+                <div class="col-lg-6">
+                    <div class="form-check form-group">
+                        <input asp-for="WcRazemZLazienka" class="form-check-input" type="checkbox" />
+                        <label asp-for="WcRazemZLazienka" class="form-check-label">WC razem z łazienką</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Balkon" class="form-check-input" type="checkbox" />
+                        <label asp-for="Balkon" class="form-check-label">Balkon</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Winda" class="form-check-input" type="checkbox" />
+                        <label asp-for="Winda" class="form-check-label">Winda</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Piwnica" class="form-check-input" type="checkbox" />
+                        <label asp-for="Piwnica" class="form-check-label">Piwnica</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="OgrzewaniePodlogowe" class="form-check-input" type="checkbox" />
+                        <label asp-for="OgrzewaniePodlogowe" class="form-check-label">Ogrzewanie podłogowe</label>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-check form-group">
+                        <input asp-for="Klimatyzacja" class="form-check-input" type="checkbox" />
+                        <label asp-for="Klimatyzacja" class="form-check-label">Klimatyzacja</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Garaz" class="form-check-input" type="checkbox" />
+                        <label asp-for="Garaz" class="form-check-label">Garaż</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="MiejsceParkingoweNaZewnatrz" class="form-check-input" type="checkbox" />
+                        <label asp-for="MiejsceParkingoweNaZewnatrz" class="form-check-label">Miejsce parkingowe</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Ogrod" class="form-check-input" type="checkbox" />
+                        <label asp-for="Ogrod" class="form-check-label">Ogród</label>
+                    </div>
+                    <div class="form-check form-group">
+                        <input asp-for="Taras" class="form-check-input" type="checkbox" />
+                        <label asp-for="Taras" class="form-check-label">Taras</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ================== Kontakt ================== -->
+        <div class="col-md-6 mb-3">
+            <h4>Kontakt</h4>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefon1"></label>
+                <input asp-for="Telefon1" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefon2"></label>
+                <input asp-for="Telefon2" class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <!-- ================== Zdjęcia ================== -->
+            <h4>Zdjęcia</h4>
+            <input type="file" id="FormFileItems" name="FormFileItems" multiple class="form-control mb-2" />
+            <div id="preview" class="d-flex flex-wrap justify-content-center"></div>
+
+            <button type="submit" class="btn btn-primary mt-3">Dodaj Apartament</button>
+        </div>
+
+    </div>
+</form>
+
+<script type="text/javascript">
+    bkLib.onDomLoaded(function () { nicEditors.allTextAreas() });
+</script>
+@section Scripts {
+
+    <style>
+        .preview-item {
+            position: relative;
+            width: 33.33%;
+            min-width: 190px;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* centrowanie w pionie i poziomie */
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .preview-item:hover .close-btn {
+            opacity: 1;
+        }
+
+    </style>
+
+    <script>
+         const input = document.getElementById('FormFileItems');
+        const preview = document.getElementById('preview');
+
+        let filesArray = [];
+
+        input.addEventListener('change', () => {
+            for (const file of input.files) {
+                filesArray.push(file);
+            }
+            renderPreview();
+        });
+
+        function renderPreview() {
+            preview.innerHTML = '';
+
+            filesArray.forEach((file) => {
+                const reader = new FileReader();
+
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.classList.add('preview-item');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    img.style.objectFit = 'cover';
+                    div.appendChild(img);
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.classList.add('close-btn');
+                    btn.innerHTML = '<i class="bi bi-x-circle-fill"></i>';
+
+                    btn.addEventListener('click', () => {
+                        filesArray = filesArray.filter(f => f !== file);
+                        renderPreview();
+                    });
+
+                    div.appendChild(btn);
+                    preview.appendChild(div);
+                };
+
+                reader.readAsDataURL(file);
+            });
+
+            // od razu dopasowujemy rozmiar ikon po renderze
+            setTimeout(resizeIcons, 50);
+        }
+
+        document.querySelector('form').addEventListener('submit', () => {
+            const dataTransfer = new DataTransfer();
+            filesArray.forEach(f => dataTransfer.items.add(f));
+            input.files = dataTransfer.files;
+        });
+
+        function resizeIcons() {
+            document.querySelectorAll('.preview-item').forEach(div => {
+                const icon = div.querySelector('i');
+                if(icon) {
+                    // ikona 25% szerokości obrazka
+                    //icon.style.fontSize = (div.clientWidth * 0.25) + 'px';
+                    icon.style.fontSize = (div.clientHeight * 0.25) + 'px';
+                }
+            });
+        }
+
+        // przeliczamy przy zmianie rozmiaru okna
+        window.addEventListener('resize', resizeIcons);
+
+    </script>
+}

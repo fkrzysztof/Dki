@@ -17,40 +17,93 @@ namespace Sasso.Edit.Controllers
         {
         }
 
-        // GET: Page WWW
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.AboutText = _context.Abouts.First().Text;
+            ViewBag.AboutTextMain = _context.Abouts.First().Maintext;
+            await sendAsync();
+            return View();
+        }
+
         public async Task<IActionResult> Page(int id)
         {
             await sendAsync();
-            return View(await _context.Offers.Include(i => i.Image).FirstOrDefaultAsync(f => f.OfferID == id));
+            ViewBag.OfferId = id;
+            return View();        
         }
 
-        public async Task<IActionResult> Index()
+
+        #region Projects
+        public async Task<IActionResult> Projects()
         {
-            //await sendAsync();
-            //include image ?
-            ViewBag.Offer = await _context.Offers.Include(i => i.Image).ToListAsync();
-            var projects = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
-                                            DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync();
-            if(projects.Count() == 0)
-                projects = await _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync();
+            await sendAsync();
+            SendHowManyItems();
 
-            ViewBag.Projects = projects;
+            if (ViewBag.Index == 0)
+                return RedirectToAction("All");
+            else
+                return View("Projects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync());
 
-            //ViewBag.About = await _context.Abouts.FirstAsync();
-            return View();
-
-            //return RedirectToAction("Index","About");
-            //return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public async Task<IActionResult> Ended()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            await sendAsync();
+            SendHowManyItems();
+            return View("Projects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync());
         }
+
+        public async Task<IActionResult> All()
+        {
+            await sendAsync();
+            SendHowManyItems();
+            return View("Projects", await _context.Projects.Include(i => i.Image).Where(w => w.Active == true).ToListAsync());
+        }
+
+        #endregion
+
+        #region Preview
+
+        public async Task<IActionResult> About(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        public async Task<IActionResult> News(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        public async Task<IActionResult> Participants(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        public async Task<IActionResult> FormOfSupport(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        public async Task<IActionResult> Recruitment(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        public async Task<IActionResult> Contact(int id)
+        {
+            await sendAsync();
+            return View("Preview", _context.Projects.Include(i => i.Image).FirstOrDefault(f => f.ProjectsID == id));
+        }
+
+        #endregion
 
         #region JS
-        
+
         public string LogoJS()
         {
             var settings = _context.Settings.Include(i => i.Logo).FirstOrDefault();
@@ -60,7 +113,6 @@ namespace Sasso.Edit.Controllers
                 return "";
         }
         #endregion
-
 
         #region share
         public IActionResult Fb()
@@ -76,5 +128,23 @@ namespace Sasso.Edit.Controllers
             return Redirect("https://api.whatsapp.com/send?text=%0ahttp://www.sald.com.pl");
         }
         #endregion share
+
+        private void SendHowManyItems()
+        {
+
+            ViewBag.Index = _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+                                                        DateTime.Compare(w.EndProject, DateTime.Now) >= 0).Count();
+            ViewBag.Ended = _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).Count();
+            ViewBag.Deleted = _context.Projects.Where(w => w.Active == false).Count();
+            ViewBag.All = _context.Projects.Count();
+            ViewBag.ProjectPageText = _context.ProjectsPages.FirstOrDefault().Text;
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
     }
 }

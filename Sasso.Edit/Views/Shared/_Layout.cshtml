@@ -5,11 +5,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] </title>
+    <title>Edit duraczynski.pl</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
-
     @*Validation ******@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
@@ -26,13 +25,12 @@
         {
             controllerPage = ViewContext.RouteData.Values["Controller"].ToString();
         }
-
     }
 
     <nav class="navbar navbar-expand-lg navbar-light mb-5 shadow-lg bg-white">
         <div class="container">
             <a class="navbar-brand" href="#">
-
+                @*logo*@
                 <img id="logo" src="" style="max-height:50px;" />
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,6 +44,7 @@
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Offer" ? "active" : "")" asp-controller="Offer" asp-action="Index"><i class="bi bi-folder2-open m-2 icon-menu"></i>Oferta</a>
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Projects" ? "active" : "")" asp-controller="Projects" asp-action="Index"><i class="bi bi-folder2-open m-2 icon-menu"></i>Projekty</a>
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Contact" ? "active" : "")" asp-controller="Contact" asp-action="Index"><i class="bi bi-phone m-2 icon-menu"></i>Kontakt</a>
+                    <a class="nav-link d-flex align-items-center @(controllerPage == "Apartments" ? "active" : "")" asp-controller="Apartments" asp-action="Index"><i class="bi bi-houses m-2 icon-menu"></i>Wynajem</a>
                 </div>
 
                 <partial name="_LoginPartial" />

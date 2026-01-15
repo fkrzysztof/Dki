@@ -23,6 +23,7 @@ namespace Sasso.Data.Data
         public DbSet<Projects> Projects { get; set; }
         public DbSet<FileDownload> FileDownloads { get; set; }
         public DbSet<ProjectsPage> ProjectsPages { get; set; }
+        public DbSet<Apartment> Apartments { get; set; }
 
     }
 }

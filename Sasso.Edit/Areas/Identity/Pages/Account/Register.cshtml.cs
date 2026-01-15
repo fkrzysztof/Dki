@@ -16,8 +16,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Sasso.Edit.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
-    //[Authorize]
+    //[AllowAnonymous]
+    [Authorize]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;

@@ -36,6 +36,10 @@ namespace Sasso.Data.Data.Data
         public int? FilesCollectionID { get; set; }
         public Projects FilesCollection { get; set; }
 
+        public int? ApartmentID { get; set; }
+        [ForeignKey("ApartmentID")]
+        public Apartment Apartment { get; set; }
+
     }
 }
 

@@ -20,135 +20,65 @@ namespace Sasso.Edit.Controllers
         {
         }
 
-        // GET: ProjectsPages
+
+        private void SendHowManyItems()
+        {
+
+            ViewBag.Index = _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+                                                        DateTime.Compare(w.EndProject, DateTime.Now) >= 0).Count();
+            ViewBag.Ended = _context.Projects.Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).Count();
+            ViewBag.Deleted = _context.Projects.Where(w => w.Active == false).Count();
+            ViewBag.All = _context.Projects.Count();
+        }
+
+        // GET: Projects
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProjectsPages.ToListAsync());
+            SendHowManyItems();
+
+            var projectPage = await _context.ProjectsPages.FirstOrDefaultAsync();
+            if (projectPage == null)
+            {
+                _context.ProjectsPages.Add(new ProjectsPage() { Text = "" });
+                _context.SaveChanges();
+            }
+
+            var projectsList = await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.StartProject, DateTime.Now) <= 0 &&
+                                                        DateTime.Compare(w.EndProject, DateTime.Now) >= 0).ToListAsync();
+
+            if (projectsList.Count == 0)
+            {
+                return RedirectToAction("All");
+            }
+            else
+            {
+                ViewBag.Project = projectsList;
+                return View(await _context.ProjectsPages.FirstAsync());
+            }
+
         }
 
-        // GET: ProjectsPages/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Ended()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var projectsPage = await _context.ProjectsPages
-                .FirstOrDefaultAsync(m => m.ProjectsPageId == id);
-            if (projectsPage == null)
-            {
-                return NotFound();
-            }
-
-            return View(projectsPage);
+            SendHowManyItems();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).Where(w => w.Active == true && DateTime.Compare(w.EndProject, DateTime.Now) < 0).ToListAsync();
+            return View("Index", await _context.ProjectsPages.FirstAsync());
         }
 
-        // GET: ProjectsPages/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Deleted()
         {
-            return View();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).Where(w => w.Active == false).ToListAsync();
+            SendHowManyItems();
+            return View("Index", await _context.ProjectsPages.FirstAsync());
         }
 
-        // POST: ProjectsPages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectsPageId,Text")] ProjectsPage projectsPage)
+        public async Task<IActionResult> All()
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(projectsPage);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(projectsPage);
+            SendHowManyItems();
+            ViewBag.Project = await _context.Projects.Include(i => i.Image).ToListAsync();
+            return View("Index", await _context.ProjectsPages.FirstAsync());
         }
 
-        // GET: ProjectsPages/EditTEXT/5
-        public async Task<IActionResult> EditText(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var projectsPage = await _context.ProjectsPages.FindAsync(id);
-            if (projectsPage == null)
-            {
-                return NotFound();
-            }
-            return View(projectsPage);
-        }
-
-        // POST: ProjectsPages/EditTEXT/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditText(int id, [Bind("ProjectsPageId,Text")] ProjectsPage projectsPage)
-        {
-            if (id != projectsPage.ProjectsPageId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(projectsPage);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectsPageExists(projectsPage.ProjectsPageId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(projectsPage);
-        }
-
-        // GET: ProjectsPages/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var projectsPage = await _context.ProjectsPages
-                .FirstOrDefaultAsync(m => m.ProjectsPageId == id);
-            if (projectsPage == null)
-            {
-                return NotFound();
-            }
-
-            return View(projectsPage);
-        }
-
-        // POST: ProjectsPages/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var projectsPage = await _context.ProjectsPages.FindAsync(id);
-            _context.ProjectsPages.Remove(projectsPage);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProjectsPageExists(int id)
-        {
-            return _context.ProjectsPages.Any(e => e.ProjectsPageId == id);
-        }
     }
 }

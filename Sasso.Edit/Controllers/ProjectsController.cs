@@ -89,8 +89,8 @@ namespace Sasso.Edit.Controllers
 
         public IActionResult About(int id)
         {
-            ViewBag.Project = _context.Projects.FirstOrDefault(f => f.ProjectsID == id).About;
-            ViewBag.Name = _context.Projects.FirstOrDefault(f => f.ProjectsID == id).Name;
+            //ViewBag.Project = _context.Projects.FirstOrDefault(f => f.ProjectsID == id).About;
+            //ViewBag.Name = _context.Projects.FirstOrDefault(f => f.ProjectsID == id).Name;
             ViewBag.ProjectId = id;
             return View("Preview");
         }
@@ -199,6 +199,8 @@ namespace Sasso.Edit.Controllers
                 return NotFound();
             }
 
+            projects.Image = _context.MyFiles.FirstOrDefault(f => f.ProjectsID == projects.ProjectsID);
+
             if (ModelState.IsValid)
             {
                 try
@@ -213,6 +215,8 @@ namespace Sasso.Edit.Controllers
                         //projects.MediaItem = new CloudAccess().AddPic(projects.FormFileItem, "Projects");
                         projects.Image = FileAction.UploadFiles(projects.FormFileItem).Result.FirstOrDefault();
                     }
+                    //_context.Update(projects);
+                    //await _context.SaveChangesAsync();
                     if (Files.Length > 0)
                     {
                         //projects.Files = await UploadFiles(Files);

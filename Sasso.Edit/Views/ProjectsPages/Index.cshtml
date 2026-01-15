@@ -1,0 +1,110 @@
+﻿@model Sasso.Data.Data.Data.ProjectsPage
+@using Sasso.Data.Data.Data
+@using Sald.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    string actionPage = "";
+    if (ViewContext.RouteData.Values["Action"] != null)
+    {
+        actionPage = ViewContext.RouteData.Values["Action"].ToString();
+    }
+}
+
+<div class="row">
+    <div class="col-12 text-right">
+        <div class="row mb-4">
+            <div class="col-12 d-flex align-items-center justify-content-center">
+                Opis<a href="#" class="hideButton"><i class="bi bi-chevron-bar-expand m-2" style="font-size: 2.0rem; color:black;"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+@*CREATE*@
+<div class="row hideElement">
+    <div class="col-md-12 card card-body shadow ">
+        <form asp-action="EditText" asp-controller="Projects">
+            <input type="hidden" asp-for="ProjectsPageId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3 py-3">
+                <textarea asp-for="Text" class="form-control" rows="15"></textarea>
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+            <div class="mb-3 d-flex justify-content-md-end mt-4">
+                <input type="submit" value="Zapisz" class="btn btn-sm btn-outline-dark" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<section id="projectsSection" data-pageid="@actionPage">
+    <div class="row no-gutters mb-0">
+        <div class="col-12 px-0 mx-0">
+            <div class="col-sm-12 text-left mt-4">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link @(actionPage == "Index" ? "active" : "")" asp-action="Index">Aktualne (@ViewBag.Index)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(actionPage == "Ended" ? "active" : "")" asp-action="Ended">Zakończone (@ViewBag.Ended)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(actionPage == "Deleted" ? "active" : "")" asp-action="Deleted">Kosz (@ViewBag.Deleted)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(actionPage == "All" ? "active" : "")" asp-action="All">Wszystkie (@ViewBag.All)</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row rounded rounded-bottom border-top-0 mb-5 bg-white pt-4 shadow">
+        @foreach (var item in ViewBag.Project as List<Projects>)
+        {
+            <div class="col-sm-4 mb-5 project-item">
+                <div class="card @(item.Active == false ? "bg-light" : "" ) h-100 w-100 shadow">
+                    <img src="@(FileAction.GetImg(item.Image))" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <hr>
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <a asp-action="About" asp-route-id="@item.ProjectsID"><i class="bi bi-zoom-in m-3" style="font-size: 1rem; color:black;"></i></a>
+                                @if (item.Active == false)
+                                {
+                                    <a asp-action="Restore" asp-route-id="@item.ProjectsID" class="removeButton" data-id="@item.ProjectsID" title="Przywróć"><i class="bi bi-arrow-clockwise m-3 " style="font-size: 1rem; color:black;"></i></a>
+                                    <a asp-action="Kill" asp-route-id="@item.ProjectsID" class="killButton" data-id="@item.ProjectsID" title="Usuń na zawsze"><i class="bi bi-trash2 m-3 " style="font-size: 1rem; color:red;"></i></a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Edit" asp-controller="Projects" asp-route-id="@item.ProjectsID" title="Edytuj"><i class="bi bi-sliders m-3" style="font-size: 1rem; color:black;"></i></a>
+                                    <a asp-action="Delete" asp-controller="Projects" asp-route-id="@item.ProjectsID" title="Przenieś do kosza" class="removeButton" data-id="@item.ProjectsID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+
+</section>
+
+<script src="~/js/projects.js"></script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+

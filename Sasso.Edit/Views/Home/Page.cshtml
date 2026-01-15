@@ -1,22 +1,23 @@
-﻿@model Sald.Data.Data.Data.Offer
-@using Sald.Data.HelperClass
+﻿@using Sald.Data.HelperClass
 @{
     Layout = "~/Views/Shared/_LayoutWWW.cshtml";
+    Sald.Data.Data.Data.Offer offerSelected = (ViewBag.Offer as List<Sald.Data.Data.Data.Offer>).First(f => f.OfferID == ViewBag.OfferId);
 }
-    <section id="scroll">
-        <div class="container px-5 mt-2 mt-md-5">
-            <div class="row gx-5 align-items-center">
-                <div class="col-lg-8 order-last order-md-first mt-2 mt-md-5">
-                    <div class="p-1 p-md-5">
-                        <h2 class="display-4">@Model.Name</h2>
-                        <div class="text-standard">@Html.Raw(Model.Text)</div>
-                        <div class="text-standard">@Html.Raw(Model.TextMain)</div>
-                    </div>
-                </div>
-                <div class="col-lg-4 d-flex align-self-start">
-                    <div class="p-0 mt-5"><img class="img-fluid rounded-circle" src="@FileAction.GetImg(Model.Image)" alt="..." /></div>
+
+<section>
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-8 order-last order-md-first mt-2 mt-md-5">
+                <div>
+                    <h2 class="display-6 green-element mb-5 mt-4 mt-md-0"><a asp-controller="Home" asp-action="Index">Oferta</a><span> / </span>@offerSelected.Name</h2>
+                    <hr />
+                    <div class="text-standard pt-3">@Html.Raw(offerSelected.Text)</div>
+                    <div class="text-standard">@Html.Raw(offerSelected.TextMain)</div>
                 </div>
             </div>
+            <div class="col-lg-4 d-flex align-self-start">
+                <div class="p-0 mt-5"><img class="img-fluid" src="@FileAction.GetImg(offerSelected.Image)" alt="" /></div>
+            </div>
         </div>
-    </section>
-
+    </div>
+</section>

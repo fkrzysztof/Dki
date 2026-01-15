@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Sald.Data.Data.Data.Apartment>
+@using Sald.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-4 mb-5 hide-show-item">
+            <div class="card h-100 w-100 shadow">
+                <img src="@FileAction.GetImg(item.Photos.FirstOrDefault())" class="card-img-top" style="width:100%; height:100%; object-fit:cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Nazwa)</h5>
+                    <hr>
+                    <p class="text-center">
+                        @* @Html.Raw(item.Opis) *@
+                        @item.PelnyAdres
+                        
+                    </p>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <a asp-action="Edit" asp-route-id="@item.ApartmentID"><i class="bi bi-sliders m-3" style="font-size: 1rem; color:black;"></i></a>
+@*                           
+                            <a asp-action="Delete" asp-route-id="@item.ApartmentID" class="removeButton" data-id="@item.ApartmentID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
+                         *@
+
+                            <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.ApartmentID" />
+                                <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
+                                    <i class="bi bi-x-circle m-3" style="font-size:1rem; color:black;"></i>
+                                </button>
+                            </form>
+
+                        
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<img src="@Url.Action("Generate", "QR")" alt="Kod QR strony" />
+
+@section Scripts {
+
+@*     <script>
+        document.querySelectorAll('.removeButton').forEach(link => {
+            link.addEventListener('click', async e => {
+                e.preventDefault();
+                if (!confirm('Czy na pewno chcesz usunąć ten apartament wraz ze zdjęciami?')) return;
+
+                const id = link.dataset.id;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                try {
+                    const res = await fetch('@Url.Action("Delete", "Apartments")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify({ id: parseInt(id) })
+                    });
+
+                    if (res.ok) {
+                        // usuń element z DOM – np. kartę apartamentu
+                        const card = link.closest('.card');
+                        if (card) card.remove();
+                    } else {
+                        alert('Nie udało się usunąć apartamentu.');
+                    }
+                } catch {
+                    alert('Błąd połączenia z serwerem.');
+                }
+            });
+        });
+    </script> *@
+
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+

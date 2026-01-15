@@ -9,9 +9,9 @@ namespace Sasso.Data.Data.Data
     {
         [Key]
         public int AboutID { get; set; }
-        [Display(Name = "Tekst główny")]
+        [Display(Name = "Temat (np: O firmie)")]
         public string Maintext { get; set; }
-        [Display(Name = "O firmie")]
+        [Display(Name = "Rozwinięcie")]
         public string Text { get; set; }
 
         public ICollection<Partners> Partners { get; set; }

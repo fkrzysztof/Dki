@@ -1,0 +1,111 @@
+﻿@model Sald.Data.Data.Data.Apartment
+@using Sald.Data.HelperClass
+
+@{
+    ViewData["Title"] = "Szczegóły Apartamentu";
+}
+
+<div class="container mt-4">
+
+    <!-- ================== GALERIA ZDJĘĆ ================== -->
+    <div class="row g-2 mb-4">
+        @foreach (var photo in Model.Photos.Take(4)) // tylko 4 zdjęcia
+        {
+            <div class="col-6 col-md-3">
+                <img src="@FileAction.GetImg(photo)" class="img-fluid rounded shadow-sm" style="width:100%; height:200px; object-fit:cover;">
+            </div>
+        }
+    </div>
+
+    <!-- ================== INFORMACJE ================== -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-3">@Model.Nazwa</h3>
+            <p class="card-text">@Html.Raw(Model.Opis)</p>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Informacje podstawowe</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Piętro:</strong> @Model.Pietro</li>
+                        <li><strong>Liczba pięter w budynku:</strong> @Model.LiczbaPieterWBudynku</li>
+                        <li><strong>Metraż:</strong> @Model.Metraz m²</li>
+                        <li><strong>Liczba pokoi:</strong> @Model.LiczbaPokoi</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Adres</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Ulica:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
+                        <li><strong>Miasto:</strong> @Model.Miasto</li>
+                        <li><strong>Kod pocztowy:</strong> @Model.KodPocztowy</li>
+                        <li><strong>Kraj:</strong> @Model.Kraj</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Udogodnienia</h5>
+                    <ul>
+                        @if (Model.Balkon)
+                        {
+                            <li>Balkon</li>
+                        }
+                        @if (Model.Winda)
+                        {
+                            <li>Winda</li>
+                        }
+                        @if (Model.Piwnica)
+                        {
+                            <li>Piwnica</li>
+                        }
+                        @if (Model.OgrzewaniePodlogowe)
+                        {
+                            <li>Ogrzewanie podłogowe</li>
+                        }
+                        @if (Model.Klimatyzacja)
+                        {
+                            <li>Klimatyzacja</li>
+                        }
+                        @if (Model.Garaz)
+                        {
+                            <li>Garaż</li>
+                        }
+                        @if (Model.MiejsceParkingoweNaZewnatrz)
+                        {
+                            <li>Miejsce parkingowe na zewnątrz</li>
+                        }
+                        @if (Model.Ogrod)
+                        {
+                            <li>Ogród</li>
+                        }
+                        @if (Model.Taras)
+                        {
+                            <li>Taras</li>
+                        }
+                        @if (Model.WcRazemZLazienka)
+                        {
+                            <li>WC razem z łazienką</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>Kontakt</h5>
+                    <ul class="list-unstyled">
+                        <li><strong>Email:</strong> @Model.Email</li>
+                        <li><strong>Telefon 1:</strong> @Model.Telefon1</li>
+                        <li><strong>Telefon 2:</strong> @Model.Telefon2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
