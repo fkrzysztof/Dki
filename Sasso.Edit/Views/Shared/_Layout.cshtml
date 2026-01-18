@@ -15,6 +15,7 @@
     @*Validation ******@
     <script src="~/js/nicEdit.js"></script>
     <link href="~/css/site.css" rel="stylesheet" />
+    @RenderSection("Styles", required: false) <!-- dodatkowe style -->
 </head>
 
 <body class="bg-light">
@@ -44,7 +45,7 @@
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Offer" ? "active" : "")" asp-controller="Offer" asp-action="Index"><i class="bi bi-folder2-open m-2 icon-menu"></i>Oferta</a>
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Projects" ? "active" : "")" asp-controller="Projects" asp-action="Index"><i class="bi bi-folder2-open m-2 icon-menu"></i>Projekty</a>
                     <a class="nav-link d-flex align-items-center @(controllerPage == "Contact" ? "active" : "")" asp-controller="Contact" asp-action="Index"><i class="bi bi-phone m-2 icon-menu"></i>Kontakt</a>
-                    <a class="nav-link d-flex align-items-center @(controllerPage == "Apartments" ? "active" : "")" asp-controller="Apartments" asp-action="Index"><i class="bi bi-houses m-2 icon-menu"></i>Wynajem</a>
+                    <a class="nav-link d-flex align-items-center @(controllerPage == "Apartments" ? "active" : "")" asp-controller="Apartments" asp-action="Index"><i class="bi bi-box m-2 icon-menu"></i>Wynajem</a>
                 </div>
 
                 <partial name="_LoginPartial" />

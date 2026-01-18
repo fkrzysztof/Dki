@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Engine.Data.Services;
+using Engine.Edit.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +14,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Engine.Edit.Controllers
 {
     public class ApartmentsController : AbstractController
     {
-        public ApartmentsController(ILogger<HomeController> logger, WebContext context)
+        private readonly EmailService _emailService;
+        public ApartmentsController(ILogger<HomeController> logger, WebContext context, EmailService emailService)
         : base(logger, context)
         {
+            _emailService = emailService;
         }
 
 
@@ -31,9 +36,14 @@ namespace Engine.Edit.Controllers
         }
 
         // GET: Apartments
-        public async Task<IActionResult> Show()
+        public async Task<IActionResult> Show(string idName, int id)
         {
-            return View(await _context.Apartments.Include(i => i.Photos).FirstOrDefaultAsync());
+            var apartments = await _context.Apartments.Include(i => i.Photos).FirstOrDefaultAsync(f => f.Nazwa == idName && f.ApartmentID == id);
+            if (apartments == null)
+            {
+                return NotFound(); // lub przekierowanie na stronę błędu
+            }
+            return View(apartments);
         }
 
 
@@ -218,6 +228,52 @@ namespace Engine.Edit.Controllers
             // Możesz zwrócić redirect albo JSON jeśli chcesz AJAX
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public IActionResult SendMail(string Name, string Email, string Phone, string Message, string id)
+        {
+            // Tu logika wysyłki maila np. przez SmtpClient lub SendGrid
+            // Możesz też zapisać do bazy jako lead
+
+            TempData["Success"] = "Dziękujemy, Twoja wiadomość została wysłana!";
+            //return RedirectToAction("Apartment", new { id = someApartmentId });
+            return RedirectToAction("Show", new { id = id });
+            
+        }
+
+        [HttpPost]
+        public IActionResult SendMailAjax(ApartmentMailModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, message = "Proszę wypełnić wszystkie wymagane pola." });
+
+            // Znajdź apartament w bazie
+            var apartment = _context.Apartments.Find(model.ApartmentId);
+            if (apartment == null || string.IsNullOrEmpty(apartment.Email))
+                return Json(new { success = false, message = "Nie znaleziono apartamentu lub adresu email." });
+
+            try
+            {
+                string body = $@"
+                <p><strong>Imię:</strong> {model.Name}</p>
+                <p><strong>Email:</strong> {model.Email}</p>
+                <p><strong>Telefon:</strong> {model.Phone}</p>
+                <p><strong>Wiadomość:</strong><br/>{model.Message}</p>
+                <p><strong>Apartament:</strong> {apartment.Nazwa} (ID: {apartment.ApartmentID})</p>
+            ";
+
+                _emailService.SendEmail(apartment.Email, "Zapytanie o apartament", body);
+
+                return Json(new { success = true, message = "Dziękujemy, Twoja wiadomość została wysłana!" });
+            }
+            catch
+            {
+                return Json(new { success = false, message = "Wystąpił błąd przy wysyłce maila." });
+            }
+        }
+
+
+
 
 
 

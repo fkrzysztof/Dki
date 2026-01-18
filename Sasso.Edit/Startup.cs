@@ -1,3 +1,4 @@
+using Engine.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,10 @@ namespace Sasso.Edit
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<WebContext>();
             services.AddControllersWithViews();
+
+            // rejestracja EmailService
+            services.AddSingleton<EmailService>();
+
             services.AddRazorPages();
 
             services.AddTransient<IEmailSender, EmailSender>();

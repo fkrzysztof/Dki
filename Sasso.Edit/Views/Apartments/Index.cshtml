@@ -22,7 +22,8 @@
                     </p>
                     <div class="row">
                         <div class="col-12 text-center">
-                            <a asp-action="Edit" asp-route-id="@item.ApartmentID"><i class="bi bi-sliders m-3" style="font-size: 1rem; color:black;"></i></a>
+                            <a asp-action="Edit" asp-route-id="@item.ApartmentID"><i class="bi bi-sliders m-3" style="font-size: 1.5rem; color:black;"></i></a>
+                            <a asp-action="Show" asp-route-idName="@item.Nazwa" asp-route-id="@item.ApartmentID"><i class="bi bi-zoom-in m-3" style="font-size: 1.5rem; color:black;"></i></a>
 @*                           
                             <a asp-action="Delete" asp-route-id="@item.ApartmentID" class="removeButton" data-id="@item.ApartmentID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
                          *@
@@ -31,7 +32,7 @@
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@item.ApartmentID" />
                                 <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
-                                    <i class="bi bi-x-circle m-3" style="font-size:1rem; color:black;"></i>
+                                    <i class="bi bi-x-circle m-3" style="font-size:1.5rem; color:red;"></i>
                                 </button>
                             </form>
 
@@ -45,9 +46,9 @@
     }
 </div>
 
-
+@* 
 <img src="@Url.Action("Generate", "QR")" alt="Kod QR strony" />
-
+ *@
 @section Scripts {
 
 @*     <script>

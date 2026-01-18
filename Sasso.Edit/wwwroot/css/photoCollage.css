@@ -1,0 +1,385 @@
+﻿.collage-wrapper {
+    display: flex;
+    height: 60vh; /* całość kolażu 40% wysokości ekranu */
+    gap: 0.5rem;
+}
+
+    .collage-wrapper img {
+        border-radius: 1rem;
+    }
+
+/* Lewa kolumna */
+.left-column {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* dziedziczy 40vh */
+    gap: 0.5rem;
+}
+
+/* Duże zdjęcie 60% */
+.large-photo {
+    height: 70%; /* dokładnie 60% wysokości lewej kolumny */
+    overflow: hidden;
+}
+
+    .large-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* Małe zdjęcia 40% */
+.small-photos {
+    height: 30%; /* dokładnie 40% wysokości lewej kolumny */
+    display: flex;
+    gap: 0.5rem;
+}
+
+    .small-photos img {
+        width: 33.33%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* Prawa kolumna */
+.right-column {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+    .right-column img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .collage-wrapper {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .left-column {
+        height: auto;
+    }
+
+    .right-column {
+        /*height: auto;*/
+        display: none;
+    }
+
+    .small-photos {
+        flex-direction: row;
+        height: auto;
+    }
+
+        .small-photos img,
+        .large-photo img,
+        .right-column img {
+            height: auto;
+        }
+}
+
+
+.top-background {
+    position: relative;
+    /*background-image: url("../images/common-bg.svg");*/
+    background-size: cover;
+    background-position: bottom center;
+    /*padding-top: 180px*/;
+    padding-bottom: 55px;
+}
+
+
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.5px;
+}
+
+
+.top-background {
+    /*background: linear-gradient( to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0) );*/
+    /*padding-top: 2rem;*/
+}
+
+.apartment-title {
+    font-size: 2.4rem;
+    font-weight: 600;
+}
+
+
+
+.card {
+    /*border: none;*/
+    border-radius: 1rem;
+/*    box-shadow:1*/
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+
+}
+
+.card-text {
+    line-height: 1.7;
+    max-width: 700px;
+}
+
+.main-text {
+    font-family: 'Playfair Display', serif;
+}
+
+
+.section-muted {
+    background-color: #f8f9fa;
+    padding: 3rem 0;
+}
+
+.collage-wrapper img {
+    transition: transform .3s ease;
+}
+
+    .collage-wrapper img:hover {
+        transform: scale(1.02);
+    }
+
+
+.card-apart {
+    background-color: #f5f5f57d;
+    -webkit-box-shadow: 6px 6px 24px -8px rgba(66, 68, 90, 1);
+    -moz-box-shadow: 6px 6px 24px -8px rgba(66, 68, 90, 1);
+    /*box-shadow: 8px 8px 24px -6px rgba(66, 68, 90, 1);*/
+    box-shadow: 6px 6px 24px -8px rgb(66 68 90);
+}
+
+ul, li {
+    background: transparent !important;
+}
+
+.photo-frame {
+    position: relative;
+}
+
+    .photo-frame img {
+        display: block;
+        width: 100%;
+        border-radius: 1rem;
+    }
+
+    /* wspólne */
+    .photo-frame::before,
+    .photo-frame::after {
+        content: "";
+        position: absolute;
+        border-radius: 1rem;
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+
+    /* ramki */
+    .photo-frame::before {
+        inset: 0.75rem;
+        border: 2px solid rgba(255,255,255,0.9);
+    }
+
+    .photo-frame::after {
+        inset: 1rem 1rem 1rem 0.5rem;
+        border: 2px solid rgba(255,255,255,0.5);
+    }
+
+body {
+    margin: 0;
+}
+
+.page-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* KLUCZ */
+    background-image: url("../images/tlocan2x72RGB50l.jpg");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: cover;
+    z-index: -1;
+}
+
+
+.btn-call {
+    display: block;
+    text-align: center;
+    padding: .75rem 1rem;
+    margin-top: .5rem;
+    background-color: #f8f9fa;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: .75rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+    .btn-call:hover {
+        background-color: #111;
+        color: #fff;
+    }
+    .btn-call svg {
+        margin-right: .5rem;
+        vertical-align: middle;
+    }
+
+
+
+
+
+
+    /*form emial*/
+/* Ikony przy polach */
+.input-icon {
+    position: relative;
+}
+
+    .input-icon .icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        color: #666;
+        pointer-events: none;
+    }
+
+    .input-icon input,
+    .input-icon textarea {
+        padding-left: 2.5rem;
+        border-radius: 0.75rem;
+        border: 1px solid #ddd;
+        transition: all 0.2s ease;
+    }
+
+        .input-icon input:focus,
+        .input-icon textarea:focus {
+            border-color: #111;
+            box-shadow: 0 0 0 2px rgba(17,17,17,0.1);
+            outline: none;
+        }
+
+/* Textarea ikonka lekko wyżej */
+.textarea-icon .icon {
+    top: 1rem;
+}
+
+/* Marginesy i spacing */
+.form-premium .form-group {
+    margin-bottom: 1rem;
+}
+
+/* Sticky przycisk na mobile */
+@media (max-width: 768px) {
+    .sticky-btn {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        margin: 0;
+        z-index: 999;
+        padding: 1rem;
+    }
+
+    .form-premium-card {
+        padding-bottom: 5rem; /* aby formularz nie był zakryty przez button */
+    }
+}
+
+
+
+.apartment-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem; /* możesz dostosować */
+    font-weight: 400; /* Great Vibes wygląda najlepiej bez bold */
+    color: #111; /* lub #fff jeśli na tle grafiki */
+    /*text-align: center;*/
+    margin-bottom: 2rem;
+    letter-spacing: 0.5px;
+    /*text-shadow: 1px 1px 3px rgba(0,0,0,0.3);*/ /* lekki cień dla lepszej czytelności */
+}
+
+.bottom-background {
+    position: relative;
+    background-image: url("../images/tlocan2x72RGB50l.jpg"); /* to samo co górne tło */
+    background-size: cover;
+    background-position: center bottom;
+    background-attachment: fixed; /* efekt paralaksy */
+    padding: 4rem 0;
+    color: #fff;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+    /* pseudo-element, który odwraca obraz o 180° */
+    .bottom-background::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: inherit;
+        background-size: inherit;
+        background-position: inherit;
+        transform: rotate(180deg); /* odwraca obraz */
+        z-index: -1;
+    }
+
+    .bottom-background h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .bottom-background p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .bottom-background .btn-call {
+        background-color: rgba(248, 249, 250, 0.9);
+        color: #111;
+        border: 1px solid #ddd;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+        .bottom-background .btn-call:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+@media (max-width: 768px) {
+    .bottom-background {
+        background-attachment: scroll; /* paralaksa wyłączona na mobile */
+        padding: 3rem 0;
+    }
+}
