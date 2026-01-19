@@ -23,276 +23,170 @@
 }
 <div class="page-bg"></div>
 <!-- ================== Galeria ================== -->
+
+
 <section class="top-background">
-    <div class="container">
-        <h2 class="mt-4 mb-0 apartment-title">@Model.Nazwa</h2>
+    <div class="container collage-container">
+
+        <h2 class="mt-4 ml-4 ml-md-0 mb-3 apartment-title">
+            Apartament Słoneczny
+        </h2>
 
         <div class="collage-wrapper">
-            <!-- Lewa kolumna -->
+
+            <!-- LEWA STRONA – DUŻE ZDJĘCIE -->
             <div class="left-column">
                 <div class="large-photo photo-frame">
-                    <img src="@FileAction.GetImg(Model.Photos[0])" />
+                    <img src="@FileAction.GetImg(Model.Photos[0])" alt="Apartament – główne zdjęcie">
                 </div>
+
+                <!-- te miniatury są widoczne tylko na desktop -->
                 <div class="small-photos">
-                    <img src="@FileAction.GetImg(Model.Photos[1])" />
-                    <img src="@FileAction.GetImg(Model.Photos[2])" />
-                    <img src="@FileAction.GetImg(Model.Photos[3])" />
+                    <img src="@FileAction.GetImg(Model.Photos[1])" alt="">
+                    <img src="@FileAction.GetImg(Model.Photos[2])" alt="">
+                    <img src="@FileAction.GetImg(Model.Photos[3])" alt="">
                 </div>
             </div>
 
-            <!-- Prawa kolumna -->
+            <!-- PRAWA STRONA – 3 ZDJĘCIA -->
             <div class="right-column photo-frame">
-                <img src="@FileAction.GetImg(Model.Photos[4])" />
+                <img src="@FileAction.GetImg(Model.Photos[1])" alt="">
+                <img src="@FileAction.GetImg(Model.Photos[2])" alt="">
+                <img src="@FileAction.GetImg(Model.Photos[3])" alt="">
             </div>
+
         </div>
     </div>
 </section>
+
+
+<!-- Fullscreen gallery overlay -->
+<div id="galleryOverlay" class="gallery-overlay">
+    <span class="gallery-close">&times;</span>
+    <img id="galleryFull" src="" class="gallery-full" />
+    <div class="gallery-controls">
+        <span class="prev">&#10094;</span>
+        <span class="next">&#10095;</span>
+    </div>
+    <div id="galleryCounter" class="gallery-counter"></div>
+</div>
+
+<!-- Ukryta lista wszystkich zdjęć do galerii -->
+<div id="allPhotos" style="display:none;">
+    @for (int i = 0; i < Model.Photos.Count; i++)
+    {
+        <img src="@FileAction.GetImg(Model.Photos[i])" data-index="@i" />
+    }
+</div>
+
+
+
 
 <!-- ================== INFORMACJE ================== -->
 <section class="top-background">
 
     <div class="container mt-4">
+        <div class="content-wrap">
+            <div class="row">
+                <div class="col-md-8 main-text mb-0 mb-md-4">
+                    <h3>Opis</h3>
+                    <p class="card-text">@Html.Raw(Model.Opis)</p>
+                </div>
 
-        <div class="row">
-            <div class="col-md-8 main-text">
-                <h3>Opis</h3>
-                <p class="card-text">@Html.Raw(Model.Opis)</p>
-            </div>
+                <div class="col-md-4 mt-0 mt-md-4">
 
-            <div class="col-md-4">
-
-                <div class="row gy-4">
-                    <div class="col-12">
-                        <div class="card card-apart">
-                            <div class="card-body">
-                                <h4>Informacje podstawowe</h4>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>Piętro:</strong> @Model.Pietro</li>
-                                    <li class="list-group-item"><strong>Liczba pięter w budynku:</strong> @Model.LiczbaPieterWBudynku</li>
-                                    <li class="list-group-item"><strong>Metraż:</strong> @Model.Metraz m²</li>
-                                    <li class="list-group-item"><strong>Liczba pokoi:</strong> @Model.LiczbaPokoi</li>
-                                </ul>
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card card-apart">
+                                <div class="card-body">
+                                    <h4>Informacje podstawowe</h4>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><strong>Piętro:</strong> @Model.Pietro</li>
+                                        <li class="list-group-item"><strong>Liczba pięter w budynku:</strong> @Model.LiczbaPieterWBudynku</li>
+                                        <li class="list-group-item"><strong>Metraż:</strong> @Model.Metraz m²</li>
+                                        <li class="list-group-item"><strong>Liczba pokoi:</strong> @Model.LiczbaPokoi</li>
+                                    </ul>
 
 
-                                
-                                <ul class="list-group list-group-flush mt-3">
+
+                                    <ul class="list-group list-group-flush mt-3">
 
                                         @if (Model.Balkon)
                                         {
-                                        <li class="list-group-item">Balkon</li>
+                                            <li class="list-group-item">Balkon</li>
                                         }
                                         @if (Model.Winda)
                                         {
-                                        <li class="list-group-item">Winda</li>
+                                            <li class="list-group-item">Winda</li>
                                         }
                                         @if (Model.Piwnica)
                                         {
-                                        <li class="list-group-item">Piwnica</li>
+                                            <li class="list-group-item">Piwnica</li>
                                         }
                                         @if (Model.OgrzewaniePodlogowe)
                                         {
-                                        <li class="list-group-item">Ogrzewanie podłogowe</li>
+                                            <li class="list-group-item">Ogrzewanie podłogowe</li>
                                         }
                                         @if (Model.Klimatyzacja)
                                         {
-                                        <li class="list-group-item">Klimatyzacja</li>
+                                            <li class="list-group-item">Klimatyzacja</li>
                                         }
                                         @if (Model.Garaz)
                                         {
-                                        <li class="list-group-item">Garaż</li>
+                                            <li class="list-group-item">Garaż</li>
                                         }
                                         @if (Model.MiejsceParkingoweNaZewnatrz)
                                         {
-                                        <li class="list-group-item">Miejsce parkingowe na zewnątrz</li>
+                                            <li class="list-group-item">Miejsce parkingowe na zewnątrz</li>
                                         }
                                         @if (Model.Ogrod)
                                         {
-                                        <li class="list-group-item">Ogród</li>
+                                            <li class="list-group-item">Ogród</li>
                                         }
                                         @if (Model.Taras)
                                         {
-                                        <li class="list-group-item">Taras</li>
+                                            <li class="list-group-item">Taras</li>
                                         }
                                         @if (Model.WcRazemZLazienka)
                                         {
-                                        <li class="list-group-item">WC razem z łazienką</li>
+                                            <li class="list-group-item">WC razem z łazienką</li>
                                         }
                                     </ul>
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card card-apart">
+                                <div class="card-body">
+                                    <h4>Adres</h4>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Ulica:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
+                                        <li><strong>Miasto:</strong> @Model.Miasto</li>
+                                        <li><strong>Kod pocztowy:</strong> @Model.KodPocztowy</li>
+                                        <li><strong>Kraj:</strong> @Model.Kraj</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card card-apart">
+                                <div class="card-body">
+                                    <h4>Kontakt</h4>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Email:</strong> @Model.Email</li>
+                                        <li><strong>Telefon 1:</strong> @Model.Telefon1</li>
+                                        <li><strong>Telefon 2:</strong> @Model.Telefon2</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <div class="card card-apart">
-                            <div class="card-body">
-                                <h4>Adres</h4>
-                                <ul class="list-unstyled">
-                                    <li><strong>Ulica:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
-                                    <li><strong>Miasto:</strong> @Model.Miasto</li>
-                                    <li><strong>Kod pocztowy:</strong> @Model.KodPocztowy</li>
-                                    <li><strong>Kraj:</strong> @Model.Kraj</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="card card-apart">
-                            <div class="card-body">
-                                <h4>Kontakt</h4>
-                                <ul class="list-unstyled">
-                                    <li><strong>Email:</strong> @Model.Email</li>
-                                    <li><strong>Telefon 1:</strong> @Model.Telefon1</li>
-                                    <li><strong>Telefon 2:</strong> @Model.Telefon2</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-</section>
-
-
-
-@* 
-<section class="top-background">
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-
-                <div class="card card-apart shadow-sm">
-                    <div class="card-body">
-                        <h4>Zapytaj o dostępność</h4>
-                        <p>Wypełnij formularz, a my odpowiemy najszybciej jak to możliwe.</p>
-
-                        <form method="post" asp-action="SendMail">
-                            <div class="mb-3">
-                                <input type="text" name="Name" class="form-control" placeholder="Imię" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="email" name="Email" class="form-control" placeholder="Email" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <input type="tel" name="Phone" class="form-control" placeholder="Telefon (opcjonalnie)">
-                            </div>
-
-                            <div class="mb-3">
-                                <textarea name="Message" class="form-control" rows="4" placeholder="Wiadomość" required></textarea>
-                            </div>
-
-                            <button type="submit" class="btn-call w-100">Wyślij zapytanie</button>
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section> *@
-
-
-@* 
-<section class="top-background">
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-
-                <div class="card card-apart shadow-sm form-premium-card">
-                    <div class="card-body">
-                        <h4>Zapytaj o dostępność</h4>
-                        <p>Wypełnij formularz, a my odpowiemy jak najszybciej.</p>
-
-                        <form method="post" asp-action="SendMail" class="form-premium">
-                            <input type="hidden" value="@Model.Nazwa" name="id" />
-                            <input type="hidden" value="@Model.ApartmentID" name="id" />
-                            <div class="form-group mb-3 input-icon">
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
-                                <input type="text" name="Name" class="form-control" placeholder="Imię" required>
-                            </div>
-
-                            <div class="form-group mb-3 input-icon">
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-                                </svg>
-                                <input type="email" name="Email" class="form-control" placeholder="Email" required>
-                            </div>
-
-                            <div class="form-group mb-3 input-icon">
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.21.48 2.53.74 3.88.74a1 1 0 011 1v3.5a1 1 0 01-1 1C7.16 21 3 16.84 3 11a1 1 0 011-1h3.5a1 1 0 011 1c0 1.35.26 2.67.74 3.88.08.17.03.38-.21 1.11l-2.2 2.2z" />
-                                </svg>
-                                <input type="tel" name="Phone" class="form-control" placeholder="Telefon (opcjonalnie)">
-                            </div>
-
-                            <div class="form-group mb-3 input-icon textarea-icon">
-                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M4 4h16v16H4z" fill="none" />
-                                    <path d="M20 2H4c-1.1 0-2 .9-2 2v16l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
-                                </svg>
-                                <textarea name="Message" class="form-control" rows="4" placeholder="Wiadomość" required></textarea>
-                            </div>
-
-                            <button type="submit" class="btn-call w-100 sticky-btn">Wyślij zapytanie</button>
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-
- *@
-
-<section class="top-background">
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-
-                <div class="card card-apart mt-4">
-                    <div class="card-body">
-                        <h4>Skontaktuj się z nami</h4>
-                        <div id="mailResult"></div>
-
-                        <form id="apartmentForm">
-                            <input type="hidden" name="ApartmentId" value="@Model.ApartmentID" />
-
-                            <div class="mb-3">
-                                <label for="Name" class="form-label">Imię</label>
-                                <input type="text" class="form-control" name="Name" required />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="Email" class="form-label">Email</label>
-                                <input type="email" class="form-control" name="Email" required />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="Phone" class="form-label">Telefon</label>
-                                <input type="text" class="form-control" name="Phone" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="Message" class="form-label">Wiadomość</label>
-                                <textarea class="form-control" name="Message" rows="4" required></textarea>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">Wyślij wiadomość</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </section>
 
 <section class="">
@@ -308,6 +202,59 @@
     </div>
 </section>
 
+<section class="top-background">
+    <div class="container mt-4">
+        <div class="content-wrap">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+
+                    <div class="card card-apart mt-4">
+                        <div class="card-body">
+                            <h4>Wyślij wiadomość</h4>
+                            <div id="mailResult"></div>
+
+                            <form id="apartmentForm">
+                                <input type="hidden" name="ApartmentId" value="@Model.ApartmentID" />
+
+                                <div class="row g-3">
+                                    <div class="col-md-4 col-12">
+                                        <div class="mb-3">
+                                            <label for="Name" class="form-label">Imię</label>
+                                            <input type="text" class="form-control" name="Name" required />
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="Email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="Email" required />
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="Phone" class="form-label">Telefon</label>
+                                            <input type="text" class="form-control" name="Phone" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8 col-12">
+                                        <div class="mb-3 h-100 d-flex flex-column">
+                                            <label for="Message" class="form-label">Wiadomość</label>
+                                            <textarea class="form-control flex-grow-1" name="Message" rows="6" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-call mt-3">Wyślij</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 <section class="section-muted bottom-background">
 
     <div class="container">
@@ -315,7 +262,7 @@
             var address = Model.PelnyAdres;
         }
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8 mb-4 mb-md-0">
                 <iframe 
                         style="border:0; border-radius:1rem; width:100%; min-height:350px; height:100%;"
                         loading="lazy"
@@ -325,7 +272,7 @@
                 </iframe>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 mt-4 mt-md-0">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <img src="@Url.Action("Generate", "QR")" alt="Kod QR strony" style="width: 100%; height: 100%; object-fit: cover;" />
@@ -337,22 +284,6 @@
 </section>
 
 
-
-
-@* <section>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-4 text-center mt-4">
-                <a href="tel:+48123456789" class="btn-call">
-                    <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.15 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72c.12 1.05.37 2.07.75 3.02a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.09-1.09a2 2 0 0 1 2.11-.45c.95.38 1.97.63 3.02.75a2 2 0 0 1 1.72 2z"></path>
-                    </svg>
-                    Zadzwoń
-                </a>
-            </div>
-        </div>
-    </div>
-</section> *@
 
 @section Scripts {
     <script>
@@ -382,6 +313,81 @@
                     resultDiv.innerHTML = `<div class="alert alert-danger">Wystąpił błąd. Spróbuj ponownie.</div>`;
                 });
             });
+
+
+               //gallery
+
+            const images = document.querySelectorAll("#allPhotos img");
+            const overlay = document.getElementById("galleryOverlay");
+            const full = document.getElementById("galleryFull");
+            const counter = document.getElementById("galleryCounter");
+
+            let current = 0;
+            const total = images.length;
+
+            function openGallery(index){
+                current = index;
+                update();
+                overlay.classList.add("active");
+            }
+
+            function closeGallery(){
+                overlay.classList.remove("active");
+            }
+
+            function update(){
+                full.src = images[current].getAttribute("src");
+                counter.textContent = `${current + 1} / ${total}`;
+            }
+
+            // Kliknięcie w kolaż
+            document.querySelectorAll(".photo-frame img").forEach(img => {
+                img.addEventListener("click", () => {
+                    const src = img.getAttribute("src");
+                    const index = Array.from(images).findIndex(i => i.getAttribute("src") === src);
+                    if(index >= 0) openGallery(index);
+                });
+            });
+
+            // Close
+            document.querySelector(".gallery-close").onclick = closeGallery;
+
+            // Prev / Next
+            document.querySelector(".prev").onclick = () => {
+                current = (current - 1 + total) % total;
+                update();
+            };
+            document.querySelector(".next").onclick = () => {
+                current = (current + 1) % total;
+                update();
+            };
+
+            // Keyboard
+            document.addEventListener("keydown", e => {
+                if(e.key === "Escape") closeGallery();
+                if(e.key === "ArrowLeft") document.querySelector(".prev").click();
+                if(e.key === "ArrowRight") document.querySelector(".next").click();
+            });
+
+            // Swipe mobile
+            let startX = 0;
+            let endX = 0;
+            full.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+            full.addEventListener("touchmove", e => endX = e.touches[0].clientX);
+            full.addEventListener("touchend", () => {
+                const diff = endX - startX;
+                if(Math.abs(diff) > 50){
+                    if(diff > 0) document.querySelector(".prev").click();
+                    else document.querySelector(".next").click();
+                }
+                startX = 0;
+                endX = 0;
+            });
+
+
         });
+
+
     </script>
+
 }

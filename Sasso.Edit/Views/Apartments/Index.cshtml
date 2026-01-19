@@ -6,29 +6,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-sm-4 mb-5 hide-show-item">
-            <div class="card h-100 w-100 shadow">
-                <img src="@FileAction.GetImg(item.Photos.FirstOrDefault())" class="card-img-top" style="width:100%; height:100%; object-fit:cover;">
+            <div class="card h-100 w-100 shadow apartment-card">
+                <!-- kontener z proporcją kwadratu -->
+                <div class="card-img-wrapper">
+                    <img src="@FileAction.GetImg(item.Photos.FirstOrDefault())" class="card-img-top" alt="@item.Nazwa">
+                </div>
+
                 <div class="card-body">
                     <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Nazwa)</h5>
                     <hr>
                     <p class="text-center">
-                        @* @Html.Raw(item.Opis) *@
-                        @item.PelnyAdres
-                        
+                        ID: @item.ApartmentID <br />
+                        @item.Ulica @item.NumerBudynku@(string.IsNullOrEmpty(item.NumerMieszkania) ? "" : " " + item.NumerMieszkania) <br />
+                        @item.KodPocztowy, @item.Miasto
                     </p>
                     <div class="row">
                         <div class="col-12 text-center">
                             <a asp-action="Edit" asp-route-id="@item.ApartmentID"><i class="bi bi-sliders m-3" style="font-size: 1.5rem; color:black;"></i></a>
                             <a asp-action="Show" asp-route-idName="@item.Nazwa" asp-route-id="@item.ApartmentID"><i class="bi bi-zoom-in m-3" style="font-size: 1.5rem; color:black;"></i></a>
-@*                           
-                            <a asp-action="Delete" asp-route-id="@item.ApartmentID" class="removeButton" data-id="@item.ApartmentID"><i class="bi bi-x-circle m-3 " style="font-size: 1rem; color:black;"></i></a>
-                         *@
-
-                            <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline">
+@*                             <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@item.ApartmentID" />
+                                <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
+                                    <i class="bi bi-x-circle m-3" style="font-size:1.5rem; color:red;"></i>
+                                </button>
+                            </form> *@
+                            <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline"
+                                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten apartament?');">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="id" value="@item.ApartmentID" />
                                 <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
@@ -36,58 +45,51 @@
                                 </button>
                             </form>
 
-                        
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     }
 </div>
 
-@* 
-<img src="@Url.Action("Generate", "QR")" alt="Kod QR strony" />
- *@
+
+
+
+
+
+
 @section Scripts {
 
-@*     <script>
-        document.querySelectorAll('.removeButton').forEach(link => {
-            link.addEventListener('click', async e => {
-                e.preventDefault();
-                if (!confirm('Czy na pewno chcesz usunąć ten apartament wraz ze zdjęciami?')) return;
+    <style>
+        /* Kwadratowy kontener dla obrazka */
+        .card-img-wrapper {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* KWADRAT */
+            overflow: hidden;
+            border-radius: 0.5rem; /* opcjonalnie */
+        }
 
-                const id = link.dataset.id;
-                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            .card-img-wrapper img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* dopasowuje zdjęcie do kwadratu */
+                display: block;
+            }
 
-                try {
-                    const res = await fetch('@Url.Action("Delete", "Apartments")', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'RequestVerificationToken': token
-                        },
-                        body: JSON.stringify({ id: parseInt(id) })
-                    });
-
-                    if (res.ok) {
-                        // usuń element z DOM – np. kartę apartamentu
-                        const card = link.closest('.card');
-                        if (card) card.remove();
-                    } else {
-                        alert('Nie udało się usunąć apartamentu.');
-                    }
-                } catch {
-                    alert('Błąd połączenia z serwerem.');
-                }
-            });
-        });
-    </script> *@
+        /* Dodatkowo: wyrównanie kart w kolumnie */
+        .apartment-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
 
 
-    @{
+    </style>
+
+@*     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    } *@
 }
 
 

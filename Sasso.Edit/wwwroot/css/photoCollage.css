@@ -383,3 +383,175 @@ body {
         padding: 3rem 0;
     }
 }
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+    .collage-wrapper {
+        flex-direction: row;
+        aspect-ratio: 1 / 1; /* 🔥 KWADRAT */
+        height: auto;
+        gap: 0.5rem;
+    }
+
+    /* LEWA STRONA – 75% */
+    .left-column {
+        flex: 0 0 75%;
+        height: 100%;
+    }
+
+    .large-photo {
+        height: 100%;
+    }
+
+    /* chowamy dolne miniatury z lewej */
+    .small-photos {
+        display: none;
+    }
+
+    /* PRAWA STRONA – 25% */
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 25%;
+        height: 100%;
+        gap: 0.5rem;
+    }
+
+        .right-column img {
+            height: calc(100% / 3);
+            width: 100%;
+            object-fit: cover;
+        }
+
+
+        .large-photo {
+            border-radius: 0.5rem;
+            overflow: hidden; /* KLUCZ */
+        }
+
+            .large-photo img {
+                border-radius: 0; /* obraz wypełnia kontener */
+            }
+
+        .small-photos img {
+            border-radius: 0.5rem;
+        }
+
+        .collage-container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .collage-wrapper {
+            padding: 0 0.75rem; /* kontrolowany margines */
+        }
+
+
+    /* Wersja mobilna - tylko duże zdjęcie ma ramki */
+    @media (max-width: 768px) {
+        /* Wszystkie photo-frame poza large-photo */
+        .small-photos .photo-frame::before,
+        .small-photos .photo-frame::after,
+        .right-column.photo-frame::before,
+        .right-column.photo-frame::after {
+            content: none; /* usuwa ramki */
+        }
+    }
+
+
+
+}
+
+@media (max-width: 768px) {
+    .content-wrap {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .apartment-title {
+        margin-left: 1rem;
+    }
+
+
+}
+
+
+/* Fullscreen gallery overlay - działa na wszystkich ekranach */
+.gallery-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: none; /* domyślnie ukryty */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* klucz */
+    overflow: hidden;
+}
+
+    .gallery-overlay.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+.gallery-full {
+    max-width: 95%;
+    max-height: 95%;
+    border-radius: 1rem;
+    display: block;
+}
+
+.gallery-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+
+.gallery-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 1rem;
+}
+
+    .gallery-controls span {
+        color: #fff;
+        font-size: 3rem;
+        cursor: pointer;
+    }
+
+.gallery-counter {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+

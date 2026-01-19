@@ -1,5 +1,6 @@
 ﻿using Engine.Data.Services;
 using Engine.Edit.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -35,6 +36,8 @@ namespace Engine.Edit.Controllers
             return View(await _context.Apartments.Include(i => i.Photos).ToListAsync());
         }
 
+        // Ta akcja jest dostępna dla wszystkich, nawet niezalogowanych
+        [AllowAnonymous]
         // GET: Apartments
         public async Task<IActionResult> Show(string idName, int id)
         {
@@ -260,6 +263,8 @@ namespace Engine.Edit.Controllers
                 <p><strong>Telefon:</strong> {model.Phone}</p>
                 <p><strong>Wiadomość:</strong><br/>{model.Message}</p>
                 <p><strong>Apartament:</strong> {apartment.Nazwa} (ID: {apartment.ApartmentID})</p>
+                <p><strong>Apartament:</strong> {apartment.PelnyAdres}</p>
+
             ";
 
                 _emailService.SendEmail(apartment.Email, "Zapytanie o apartament", body);
