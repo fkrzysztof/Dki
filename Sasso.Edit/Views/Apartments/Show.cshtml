@@ -1,6 +1,13 @@
 ﻿@model Sald.Data.Data.Data.Apartment
 @using Sald.Data.HelperClass
+@using Microsoft.AspNetCore.Http.Extensions
 
+
+@{
+    // Pobranie pełnego URL bieżącej strony
+    var currentUrl = Context.Request.GetDisplayUrl(); // <- użyj Context.Request
+    var qrUrl = Url.Action("Generate", "QR", new { url = currentUrl });
+}
 
 
 @{
@@ -275,7 +282,12 @@
             <div class="col-md-4 mt-4 mt-md-0">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <img src="@Url.Action("Generate", "QR")" alt="Kod QR strony" style="width: 100%; height: 100%; object-fit: cover;" />
+
+
+
+                        <img src="@qrUrl" alt="QR kod" style="width: 100%; height: 100%; object-fit: cover;" />
+
+                    
                     </div>
                 </div>
             </div>

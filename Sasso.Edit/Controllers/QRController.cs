@@ -4,12 +4,17 @@ using QRCoder;
 using System.Drawing;
 using System.IO;
 
+
 public class QRController : Controller
 {
-    public IActionResult Generate()
+    // url przychodzi z widoku
+    public IActionResult Generate(string url)
     {
-        // Pobieramy aktualny adres URL
-        var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Request.Path}{Request.QueryString}";
+        if (string.IsNullOrEmpty(url))
+        {
+            // fallback, jeśli url nie został przekazany
+            url = "https://example.com";
+        }
 
         using (var qrGenerator = new QRCodeGenerator())
         using (var qrData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q))
