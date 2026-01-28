@@ -3,6 +3,28 @@
 @using Microsoft.AspNetCore.Http.Extensions
 
 
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+
+@* <div class="lang-links">
+    <a asp-controller="Apartments" asp-action="SetLanguage"
+       asp-route-culture="pl-PL" asp-route-returnUrl="@returnUrl">🇵🇱</a>
+
+    <a asp-controller="Apartments" asp-action="SetLanguage"
+       asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">🇬🇧</a>
+
+    <a asp-controller="Apartments" asp-action="SetLanguage"
+       asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">🇺🇦</a>
+</div> *@
+
+
+
+
 @{
     // Pobranie pełnego URL bieżącej strony
     var currentUrl = Context.Request.GetDisplayUrl(); // <- użyj Context.Request
@@ -35,20 +57,39 @@
 <section class="top-background">
     <div class="container collage-container">
 
-        <h2 class="mt-4 ml-4 ml-md-0 mb-3 apartment-title">
-            Apartament Słoneczny
-        </h2>
+
+        <div class="row align-items-center mt-3">
+            <!-- align-items-center wyrównuje pionowo -->
+            <div class="col d-flex justify-content-start  animate-on-scroll slide-left">
+                <h2 class="apartment-title mb-0">
+                    @Model.Nazwa
+                </h2>
+            </div>
+            <div class="col d-flex justify-content-end animate-on-scroll slide-right">
+                <div class="lang-links">
+                    <a asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="pl-PL" asp-route-returnUrl="@returnUrl">PL</a>
+
+                    <a asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">EN</a>
+
+                    <a asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">UA</a>
+                </div>
+            </div>
+        </div>
+
 
         <div class="collage-wrapper">
 
             <!-- LEWA STRONA – DUŻE ZDJĘCIE -->
-            <div class="left-column">
+            <div class="left-column  animate-on-scroll fade-up">
                 <div class="large-photo photo-frame">
                     <img src="@FileAction.GetImg(Model.Photos[0])" alt="Apartament – główne zdjęcie">
                 </div>
 
                 <!-- te miniatury są widoczne tylko na desktop -->
-                <div class="small-photos">
+                <div class="small-photos  animate-on-scroll fade-up">
                     <img src="@FileAction.GetImg(Model.Photos[1])" alt="">
                     <img src="@FileAction.GetImg(Model.Photos[2])" alt="">
                     <img src="@FileAction.GetImg(Model.Photos[3])" alt="">
@@ -56,7 +97,7 @@
             </div>
 
             <!-- PRAWA STRONA – 3 ZDJĘCIA -->
-            <div class="right-column photo-frame">
+            <div class="right-column photo-frame  animate-on-scroll fade-up">
                 <img src="@FileAction.GetImg(Model.Photos[1])" alt="">
                 <img src="@FileAction.GetImg(Model.Photos[2])" alt="">
                 <img src="@FileAction.GetImg(Model.Photos[3])" alt="">
@@ -95,23 +136,30 @@
     <div class="container mt-4">
         <div class="content-wrap">
             <div class="row">
-                <div class="col-md-8 main-text mb-0 mb-md-4">
-                    <h3>Opis</h3>
+                <div class="col-md-8 main-text mb-0 mb-md-4 animate-on-scroll fade-up">
+                   @*  <h3>Opis</h3> *@
+                    <h3>@Localizer["description"]</h3>
                     <p class="card-text">@Html.Raw(Model.Opis)</p>
                 </div>
 
                 <div class="col-md-4 mt-0 mt-md-4">
 
                     <div class="row gy-4">
-                        <div class="col-12">
+                        <div class="col-12 animate-on-scroll slide-right">
                             <div class="card card-apart">
                                 <div class="card-body">
-                                    <h4>Informacje podstawowe</h4>
+                                   @*  <h4>Informacje podstawowe</h4> *@
+                                    <h4>@Localizer["basicInformation"]</h4>
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item"><strong>Piętro:</strong> @Model.Pietro</li>
+@*                                         <li class="list-group-item"><strong>Piętro:</strong> @Model.Pietro</li>
                                         <li class="list-group-item"><strong>Liczba pięter w budynku:</strong> @Model.LiczbaPieterWBudynku</li>
                                         <li class="list-group-item"><strong>Metraż:</strong> @Model.Metraz m²</li>
-                                        <li class="list-group-item"><strong>Liczba pokoi:</strong> @Model.LiczbaPokoi</li>
+                                        <li class="list-group-item"><strong>Liczba pokoi:</strong> @Model.LiczbaPokoi</li> *@
+
+                                        <li class="list-group-item"><strong>@Localizer["floor"]:</strong> @Model.Pietro</li>
+                                        <li class="list-group-item"><strong>@Localizer["allFloors"]:</strong> @Model.LiczbaPieterWBudynku</li>
+                                        <li class="list-group-item"><strong>@Localizer["apartmentSize"]:</strong> @Model.Metraz m²</li>
+                                        <li class="list-group-item"><strong>@Localizer["allRooms"]:</strong> @Model.LiczbaPokoi</li>
                                     </ul>
 
 
@@ -120,70 +168,72 @@
 
                                         @if (Model.Balkon)
                                         {
-                                            <li class="list-group-item">Balkon</li>
+                                            <li class="list-group-item">@Localizer["balcony"]</li>
                                         }
                                         @if (Model.Winda)
                                         {
-                                            <li class="list-group-item">Winda</li>
+                                            <li class="list-group-item">@Localizer["elevator"]</li>
                                         }
                                         @if (Model.Piwnica)
                                         {
-                                            <li class="list-group-item">Piwnica</li>
+                                            <li class="list-group-item">@Localizer["basement"]</li>
                                         }
                                         @if (Model.OgrzewaniePodlogowe)
                                         {
-                                            <li class="list-group-item">Ogrzewanie podłogowe</li>
+                                            <li class="list-group-item">@Localizer["underfloorHeating"]</li>
                                         }
                                         @if (Model.Klimatyzacja)
                                         {
-                                            <li class="list-group-item">Klimatyzacja</li>
+                                            <li class="list-group-item">@Localizer["airConditioning"]</li>
                                         }
                                         @if (Model.Garaz)
                                         {
-                                            <li class="list-group-item">Garaż</li>
+                                            <li class="list-group-item">@Localizer["garage"]</li>
                                         }
                                         @if (Model.MiejsceParkingoweNaZewnatrz)
                                         {
-                                            <li class="list-group-item">Miejsce parkingowe na zewnątrz</li>
+                                            <li class="list-group-item">@Localizer["parkingSpaceOutside"]</li>
                                         }
                                         @if (Model.Ogrod)
                                         {
-                                            <li class="list-group-item">Ogród</li>
+                                            <li class="list-group-item">@Localizer["garden"]</li>
                                         }
                                         @if (Model.Taras)
                                         {
-                                            <li class="list-group-item">Taras</li>
+                                            <li class="list-group-item">@Localizer["terrace"]</li>
                                         }
                                         @if (Model.WcRazemZLazienka)
                                         {
-                                            <li class="list-group-item">WC razem z łazienką</li>
+                                            <li class="list-group-item">@Localizer["toiletWithBathroom"]</li>
                                         }
                                     </ul>
 
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 animate-on-scroll slide-right">
                             <div class="card card-apart">
                                 <div class="card-body">
-                                    <h4>Adres</h4>
+                                   @*  <h4>Adres</h4> *@
+                                    <h4>@Localizer["address"]</h4>
                                     <ul class="list-unstyled">
-                                        <li><strong>Ulica:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
-                                        <li><strong>Miasto:</strong> @Model.Miasto</li>
-                                        <li><strong>Kod pocztowy:</strong> @Model.KodPocztowy</li>
-                                        <li><strong>Kraj:</strong> @Model.Kraj</li>
+                                        <li><strong>@Localizer["street"]:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
+                                        <li><strong>@Localizer["city"]:</strong> @Model.Miasto</li>
+                                        <li><strong>@Localizer["zipCode"]:</strong> @Model.KodPocztowy</li>
+                                        <li><strong>@Localizer["country"]:</strong> @Model.Kraj</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 animate-on-scroll slide-right">
                             <div class="card card-apart">
                                 <div class="card-body">
-                                    <h4>Kontakt</h4>
+                                   @*  <h4>Kontakt</h4> *@
+                                    <h4>@Localizer["contact"]</h4>
                                     <ul class="list-unstyled">
-                                        <li><strong>Email:</strong> @Model.Email</li>
-                                        <li><strong>Telefon 1:</strong> @Model.Telefon1</li>
-                                        <li><strong>Telefon 2:</strong> @Model.Telefon2</li>
+                                        <li><strong>@Localizer["email"]:</strong> @Model.Email</li>
+                                        <li><strong>@Localizer["phone"]:</strong> @Model.Telefon1</li>
+                                        <li><strong>@Localizer["phone"]:</strong> @Model.Telefon2</li>
                                     </ul>
                                 </div>
                             </div>
@@ -197,14 +247,17 @@
 </section>
 
 <section class="">
-    <div class="container text-center py-5">
-        <h3>Skontaktuj się z nami!</h3>
-        <p>Zapytaj o apartament lub umów się na wizytę.</p>
-        <a href="tel:+48123456789" class="btn-call mt-3">
+    <div class="container text-center py-5  animate-on-scroll slide-left">
+        @* <h3>Skontaktuj się z nami!</h3> *@
+        <h3>@Localizer["contactAs"]</h3>
+       @*  <p>Zapytaj o apartament lub umów się na wizytę.</p> *@
+        <p>@Localizer["askAbout"]</p>
+        <a href="@Model.Telefon1" class="btn-call mt-3">
             <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.15 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72c.12 1.05.37 2.07.75 3.02a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.09-1.09a2 2 0 0 1 2.11-.45c.95.38 1.97.63 3.02.75a2 2 0 0 1 1.72 2z"></path>
             </svg>
-            Zadzwoń
+           @*  Zadzwoń *@
+            @Localizer["callUs"]
         </a>
     </div>
 </section>
@@ -215,9 +268,10 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
 
-                    <div class="card card-apart mt-4">
+                    <div class="card card-apart mt-4  animate-on-scroll slide-right">
                         <div class="card-body">
-                            <h4>Wyślij wiadomość</h4>
+                           @*  <h4>Wyślij wiadomość</h4> *@
+                            <h4>@Localizer["sendMessage"]</h4>
                             <div id="mailResult"></div>
 
                             <form id="apartmentForm">
@@ -226,30 +280,30 @@
                                 <div class="row g-3">
                                     <div class="col-md-4 col-12">
                                         <div class="mb-3">
-                                            <label for="Name" class="form-label">Imię</label>
+                                            <label for="Name" class="form-label">@Localizer["name"]</label>
                                             <input type="text" class="form-control" name="Name" required />
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="Email" class="form-label">Email</label>
+                                            <label for="Email" class="form-label">@Localizer["email"]</label>
                                             <input type="email" class="form-control" name="Email" required />
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="Phone" class="form-label">Telefon</label>
+                                            <label for="Phone" class="form-label">@Localizer["phone"]</label>
                                             <input type="text" class="form-control" name="Phone" />
                                         </div>
                                     </div>
 
                                     <div class="col-md-8 col-12">
                                         <div class="mb-3 h-100 d-flex flex-column">
-                                            <label for="Message" class="form-label">Wiadomość</label>
+                                            <label for="Message" class="form-label">@Localizer["message"]</label>
                                             <textarea class="form-control flex-grow-1" name="Message" rows="6" required></textarea>
                                         </div>
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn-call mt-3">Wyślij</button>
+                                <button type="submit" class="btn-call mt-3">@Localizer["send"]</button>
                             </form>
                         </div>
                     </div>
@@ -269,7 +323,7 @@
             var address = Model.PelnyAdres;
         }
         <div class="row">
-            <div class="col-md-8 mb-4 mb-md-0">
+            <div class="col-md-8 mb-4 mb-md-0  animate-on-scroll slide-left">
                 <iframe 
                         style="border:0; border-radius:1rem; width:100%; min-height:350px; height:100%;"
                         loading="lazy"
@@ -279,7 +333,7 @@
                 </iframe>
             </div>
 
-            <div class="col-md-4 mt-4 mt-md-0">
+            <div class="col-md-4 mt-4 mt-md-0 animate-on-scroll slide-right">
                 <div class="card shadow-sm">
                     <div class="card-body">
 
@@ -394,6 +448,26 @@
                 }
                 startX = 0;
                 endX = 0;
+            });
+
+//animate
+
+            const observer = new IntersectionObserver(
+                entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                            observer.unobserve(entry.target); // animacja tylko raz
+                        }
+                    });
+                },
+                {
+                    threshold: 0.2 // % widoczności
+                }
+            );
+
+            document.querySelectorAll(".animate-on-scroll").forEach(el => {
+                observer.observe(el);
             });
 
 

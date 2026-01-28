@@ -24,3 +24,51 @@ namespace Sasso.Edit
                 });
     }
 }
+
+
+
+//using System.Globalization;
+//using Microsoft.AspNetCore.Builder;
+//using Microsoft.AspNetCore.Localization;
+
+
+//var builder = WebApplication.CreateBuilder(args);
+
+//builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+//builder.Services.AddControllersWithViews()
+//    .AddViewLocalization()
+//    .AddDataAnnotationsLocalization();
+
+//var app = builder.Build();
+
+//var supportedCultures = new[]
+//{
+//    new CultureInfo("pl-PL"),
+//    new CultureInfo("en-US"),
+//    new CultureInfo("uk-UA")
+//};
+
+//var localizationOptions = new RequestLocalizationOptions
+//{
+//    DefaultRequestCulture = new RequestCulture("pl-PL"),
+//    SupportedCultures = supportedCultures,
+//    SupportedUICultures = supportedCultures
+//};
+
+//localizationOptions.RequestCultureProviders = new IRequestCultureProvider[]
+//{
+//    new CookieRequestCultureProvider(),
+//    new AcceptLanguageHeaderRequestCultureProvider()
+//};
+
+//app.UseRequestLocalization(localizationOptions);
+
+//app.UseStaticFiles();
+//app.UseRouting();
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//app.Run();

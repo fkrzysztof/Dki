@@ -2,6 +2,7 @@
 using Engine.Edit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,26 @@ namespace Engine.Edit.Controllers
         {
             _emailService = emailService;
         }
+        
+        private static readonly string[] SupportedCultures =
+        {
+            "pl-PL", "en-US", "uk-UA"
+        };
 
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            if (!SupportedCultures.Contains(culture))
+                culture = "pl-PL";
+
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(
+                    new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
+        }
 
 
         // GET: Apartments
