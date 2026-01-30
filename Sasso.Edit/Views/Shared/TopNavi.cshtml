@@ -4,6 +4,9 @@
     string action = ViewContext.RouteData.Values["Action"].ToString();
     string icon = "";
 
+    if (action == "EditAll")
+        action = "Edytuj apartament";
+
     switch (pageName)
     {
 
@@ -24,6 +27,9 @@
             break;
         case "Settings":
             icon = "bi bi-gear";
+            break;
+        case "Apartments":
+            icon = "bi bi-box";
             break;
 
     }
@@ -51,22 +57,35 @@
         case "Settings":
             pagePL = "Ustawienia";
             break;
+        case "Apartments":
+            pagePL = "Apartamenty";
+            break;
     }
 
         <div class="row no-gutters">
-            <div class="col-sm-11 text-left">
+            <div class="col-sm-10 text-left">
                 <h2 class="display-6"><i class="@icon m-2" style="font-size: 2.5rem;"></i> @pagePL @(action == "Index" ? "" : " / " + action) </h2>
             </div>
-            <div class="col-sm-1 d-flex justify-content-between">
-                @{
+            <div class="col-sm-2 d-flex justify-content-between">
+            @{
+
+                if (action == "Edytuj apartament")
+                    {
+                        <a href="/Apartments/Show/3?idName=x"><i class="bi bi-zoom-in" style="font-size: 2.0rem; color:black;"></i></a>
+
+                    }
                     if (action != "Create" && action != "Edit" && pageName != "About" && pageName != "Settings")
                     {
                         <a asp-action="Create"><i id="createButton" class="bi bi-plus-lg" style="font-size:2rem; color:black;"></i></a>
                     }
-                    if (action != "Index" && pageName != "About")
+                if ((action != "Index" && pageName != "About") && action != "Edytuj apartament")
                     {
                         <a href="javascript: history.go(-1)"><i class="bi bi-arrow-90deg-left" style="font-size:2rem; color:black;"></i></a>
                     }
+                if (action == "Edytuj apartament")
+                {
+                    <a asp-action="Index" asp-asp-controller="Apartments"><i class="bi bi-list-task" style="font-size:2rem; color:black;"></i></a>
+                }
                 }
             </div>
             <div class="col-12">

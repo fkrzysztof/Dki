@@ -1,4 +1,5 @@
-﻿using Engine.Data.Services;
+﻿using Engine.Data.Data.Data;
+using Engine.Data.Services;
 using Engine.Edit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +13,13 @@ using Sald.Data.HelperClass;
 using Sasso.Data.Data;
 using Sasso.Edit.Controllers;
 using Sasso.Edit.Controllers.Abstract;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -59,15 +64,26 @@ namespace Engine.Edit.Controllers
         // Ta akcja jest dostępna dla wszystkich, nawet niezalogowanych
         [AllowAnonymous]
         // GET: Apartments
-        public async Task<IActionResult> Show(string idName, int id)
+
+        public IActionResult Show(string idName, int id)
         {
-            var apartments = await _context.Apartments.Include(i => i.Photos).FirstOrDefaultAsync(f => f.Nazwa == idName && f.ApartmentID == id);
-            if (apartments == null)
-            {
-                return NotFound(); // lub przekierowanie na stronę błędu
-            }
-            return View(apartments);
+            var culture = CultureInfo.CurrentUICulture.Name;
+
+            var apartment = _context.Apartments
+                .Include(a => a.Photos)
+                .Include(a => a.PageContents)
+                .FirstOrDefault(a => a.ApartmentID == id);
+
+            if (apartment == null)
+                return NotFound();
+
+            EnsurePageContents(apartment.ApartmentID);
+
+            ViewBag.CurrentCulture = culture;
+
+            return View(apartment);
         }
+
 
 
         // GET: Apartments/Create
@@ -120,7 +136,6 @@ namespace Engine.Edit.Controllers
         }
 
 
-
         // GET: Apartments/Edit/5
         public IActionResult Edit(int id)
         {
@@ -136,12 +151,134 @@ namespace Engine.Edit.Controllers
             return View(apartment);
         }
 
+        private void EnsurePageContents(int id)
+        {
+            var apartment = _context.Apartments
+            .Where(w => w.ApartmentID == id)
+            .Include(i => i.PageContents)
+            .FirstOrDefault();
+
+            if (apartment.PageContents == null)
+            {
+                apartment.PageContents = new List<PageContent>();
+            }
+
+            var cultures = new[] { "pl-PL", "en-US", "uk-UA" };
+
+            foreach (var culture in cultures)
+            {
+                // Sprawdzamy, czy dany język już istnieje
+                if (!apartment.PageContents.Any(p => p.Culture == culture))
+                {
+                    // Tworzymy nowy obiekt i dodajemy go do kontekstu oraz kolekcji
+                    var newContent = new PageContent
+                    {
+                        Apartment = apartment,   // ważne powiązanie, żeby EF Core wiedział do którego apartamentu należy
+                        PageKey = "Apartment",
+                        Culture = culture,
+                        Title = "",
+                        Description = ""
+                    };
+
+                    _context.PageContents.Add(newContent);   // EF Core teraz śledzi nowy rekord
+                    apartment.PageContents.Add(newContent);  // dodajemy też do kolekcji w obiekcie
+                }
+            }
+
+            _context.SaveChanges(); // zapisujemy wszystkie nowe wpisy
+        }
+
+
+
+
+        // Edycja treści w różnych językach
+        public IActionResult EditAll(int id, string lang)
+        {
+            var apartment = _context.Apartments
+                .Where(w => w.ApartmentID == id)
+                .Include(i => i.Photos)
+                .Include(i => i.PageContents)
+                .FirstOrDefault();
+
+            if (apartment == null)
+                return NotFound();
+
+            // Walidacja języka
+            var langTab = new[] { "pl-PL", "en-US", "uk-UA" };
+            if (!langTab.Contains(lang))
+                lang = "pl-PL";
+
+            // Pobieramy treść dla wybranego języka
+            var content = apartment.PageContents
+                .SingleOrDefault(p => p.Culture == lang);
+
+            if (content == null)
+            {
+                // Tworzymy brakujące wpisy
+                EnsurePageContents(apartment.ApartmentID);
+                _context.Entry(apartment).Collection(a => a.PageContents).Load();
+                content = apartment.PageContents.Single(p => p.Culture == lang);
+            }
+
+            ViewBag.Description = content.Description;
+            ViewBag.Name = content.Title;
+            ViewBag.Lang = lang;
+
+            // <-- aby ASP.NET Core nie nadpisywał wartości z ViewBag
+            ModelState.Remove("name");
+            ModelState.Remove("description");
+
+            return View(apartment);
+        }
+
+
+
+        //EditWebsiteLanguage
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditWebsiteLanguage(string name, string description, int id, string lang)
+        {
+            var pageContent = await _context.PageContents
+                .FirstOrDefaultAsync(i => i.ApartmentID == id && i.Culture == lang);
+
+            if (pageContent == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    pageContent.Title = name;
+                    pageContent.Description = description;
+                    _context.Update(pageContent);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Apartments.Any(e => e.ApartmentID == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            // Zawsze wracamy do EditAll, nawet jeśli ModelState był nieprawidłowy
+            return RedirectToAction("EditAll", new { id = id, lang = lang });
+        }
+
+
         // POST: Apartments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ApartmentID,Opis,Nazwa,Pietro,LiczbaPieterWBudynku,Metraz,LiczbaPokoi,WcRazemZLazienka,Balkon,Winda,Piwnica,OgrzewaniePodlogowe,Klimatyzacja,Garaz,MiejsceParkingoweNaZewnatrz,Ogród,Taras,Ulica,NumerBudynku,NumerMieszkania,Miasto,KodPocztowy,Kraj,Email,Telefon1,Telefon2")] Apartment apartment)
+        public async Task<IActionResult> Edit(int id, string lang, [Bind("ApartmentID,Opis,Nazwa,Pietro,LiczbaPieterWBudynku,Metraz,LiczbaPokoi,WcRazemZLazienka,Balkon,Winda,Piwnica,OgrzewaniePodlogowe,Klimatyzacja,Garaz,MiejsceParkingoweNaZewnatrz,Ogród,Taras,Ulica,NumerBudynku,NumerMieszkania,Miasto,KodPocztowy,Kraj,Email,Telefon1,Telefon2")] Apartment apartment)
         {
             if (id != apartment.ApartmentID)
             {
@@ -166,9 +303,10 @@ namespace Engine.Edit.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
-            return View(apartment);
+            //return View(apartment);
+            return RedirectToAction("EditAll", new { id = id, lang = lang });
         }
 
         [HttpPost]

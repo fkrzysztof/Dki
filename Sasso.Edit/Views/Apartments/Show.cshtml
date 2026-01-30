@@ -10,17 +10,13 @@
     var returnUrl = Context.Request.Path + Context.Request.QueryString;
 }
 
+@{
+    var culture = (string)ViewBag.CurrentCulture;
 
-@* <div class="lang-links">
-    <a asp-controller="Apartments" asp-action="SetLanguage"
-       asp-route-culture="pl-PL" asp-route-returnUrl="@returnUrl">🇵🇱</a>
-
-    <a asp-controller="Apartments" asp-action="SetLanguage"
-       asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">🇬🇧</a>
-
-    <a asp-controller="Apartments" asp-action="SetLanguage"
-       asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">🇺🇦</a>
-</div> *@
+    var content = Model.PageContents
+        .FirstOrDefault(p => p.Culture == culture)
+        ?? Model.PageContents.First(p => p.Culture == "pl-PL");
+}
 
 
 
@@ -57,12 +53,11 @@
 <section class="top-background">
     <div class="container collage-container">
 
-
-        <div class="row align-items-center mt-3">
+@*         <div class="row align-items-center mt-3">
             <!-- align-items-center wyrównuje pionowo -->
             <div class="col d-flex justify-content-start  animate-on-scroll slide-left">
                 <h2 class="apartment-title mb-0">
-                    @Model.Nazwa
+                       @content.Title
                 </h2>
             </div>
             <div class="col d-flex justify-content-end animate-on-scroll slide-right">
@@ -77,7 +72,39 @@
                        asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">UA</a>
                 </div>
             </div>
+        </div> *@
+
+
+        <div class="row align-items-center mt-3">
+            <div class="col-md-8 d-flex justify-content-start animate-on-scroll slide-left">
+                <h2 class="apartment-title mb-0">
+                    @content.Title
+                </h2>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end animate-on-scroll slide-right">
+@*                 <div class="lang-links">
+                    <a asp-controller="Apartments" asp-action="SetLanguage" asp-route-culture="pl-PL" asp-route-returnUrl="@returnUrl">PL</a>
+                    <a asp-controller="Apartments" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">EN</a>
+                    <a asp-controller="Apartments" asp-action="SetLanguage" asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">UA</a>
+                </div> *@
+                <div class="lang-links">
+                    <a class="@(culture == "pl-PL" ? "active" : "")"
+                       asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="pl-PL" asp-route-returnUrl="@returnUrl">PL</a>
+
+                    <a class="@(culture == "en-US" ? "active" : "")"
+                       asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="en-US" asp-route-returnUrl="@returnUrl">EN</a>
+
+                    <a class="@(culture == "uk-UA" ? "active" : "")"
+                       asp-controller="Apartments" asp-action="SetLanguage"
+                       asp-route-culture="uk-UA" asp-route-returnUrl="@returnUrl">UA</a>
+                </div>
+
+            </div>
         </div>
+
+
 
 
         <div class="collage-wrapper">
@@ -139,13 +166,14 @@
                 <div class="col-md-8 main-text mb-0 mb-md-4 animate-on-scroll fade-up">
                    @*  <h3>Opis</h3> *@
                     <h3>@Localizer["description"]</h3>
-                    <p class="card-text">@Html.Raw(Model.Opis)</p>
+                  @*   <p class="card-text">@Html.Raw(Model.Opis)</p> *@
+                    <p class="card-text">@Html.Raw(@content.Description)</p>
                 </div>
 
                 <div class="col-md-4 mt-0 mt-md-4">
 
                     <div class="row gy-4">
-                        <div class="col-12 animate-on-scroll slide-right">
+                        <div class="col-12 animate-on-scroll fade-up">
                             <div class="card card-apart">
                                 <div class="card-body">
                                    @*  <h4>Informacje podstawowe</h4> *@

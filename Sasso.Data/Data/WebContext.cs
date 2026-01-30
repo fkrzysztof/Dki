@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Engine.Data.Data.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sald.Data.Data.Data;
 using Sasso.Data.Data.Data;
@@ -24,6 +25,7 @@ namespace Sasso.Data.Data
         public DbSet<FileDownload> FileDownloads { get; set; }
         public DbSet<ProjectsPage> ProjectsPages { get; set; }
         public DbSet<Apartment> Apartments { get; set; }
+        public DbSet<PageContent> PageContents { get; set; }
 
     }
 }

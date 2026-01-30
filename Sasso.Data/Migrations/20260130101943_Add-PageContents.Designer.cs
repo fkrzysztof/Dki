@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sasso.Data.Data;
 
 namespace Sald.Data.Migrations
 {
     [DbContext(typeof(WebContext))]
-    partial class WebContextModelSnapshot : ModelSnapshot
+    [Migration("20260130101943_Add-PageContents")]
+    partial class AddPageContents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,9 +28,6 @@ namespace Sald.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ApartmentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Culture")
                         .HasColumnType("nvarchar(max)");
 
@@ -42,8 +41,6 @@ namespace Sald.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApartmentID");
 
                     b.ToTable("PageContents");
                 });
@@ -663,15 +660,6 @@ namespace Sald.Data.Migrations
                     b.ToTable("ProjectsPages");
                 });
 
-            modelBuilder.Entity("Engine.Data.Data.Data.PageContent", b =>
-                {
-                    b.HasOne("Sald.Data.Data.Data.Apartment", "Apartment")
-                        .WithMany("PageContents")
-                        .HasForeignKey("ApartmentID");
-
-                    b.Navigation("Apartment");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -809,8 +797,6 @@ namespace Sald.Data.Migrations
 
             modelBuilder.Entity("Sald.Data.Data.Data.Apartment", b =>
                 {
-                    b.Navigation("PageContents");
-
                     b.Navigation("Photos");
                 });
 

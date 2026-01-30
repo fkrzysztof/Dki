@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Engine.Data.Data.Data;
+using Microsoft.AspNetCore.Http;
 using Sasso.Data.Data.Data;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -67,5 +68,8 @@ namespace Sald.Data.Data.Data
         [NotMapped]
         public List<IFormFile> FormFileItems { get; set; }
         public List<MyFile> Photos { get; set; } = new List<MyFile>();
+
+        //PL EN UK
+        public List<PageContent> PageContents { get; set; } = new List<PageContent>();
     }
 }

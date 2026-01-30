@@ -18,16 +18,17 @@
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-title text-center">@Html.DisplayFor(modelItem => item.Nazwa)</h5>
+                    <h5 class="card-title text-center">
+                        @item.Ulica @item.NumerBudynku@(string.IsNullOrEmpty(item.NumerMieszkania) ? "" : "/" + item.NumerMieszkania) <br />
+                    </h5>
                     <hr>
                     <p class="text-center">
-                        ID: @item.ApartmentID <br />
-                        @item.Ulica @item.NumerBudynku@(string.IsNullOrEmpty(item.NumerMieszkania) ? "" : " " + item.NumerMieszkania) <br />
-                        @item.KodPocztowy, @item.Miasto
+                        @item.KodPocztowy, @item.Miasto  <br />
+                       @*  ID: @item.ApartmentID *@
                     </p>
                     <div class="row">
                         <div class="col-12 text-center">
-                            <a asp-action="Edit" asp-route-id="@item.ApartmentID"><i class="bi bi-sliders m-3" style="font-size: 1.5rem; color:black;"></i></a>
+                            <a asp-action="EditAll" asp-route-id="@item.ApartmentID" asp-route-lang="pl-PL"><i class="bi bi-sliders m-3" style="font-size: 1.5rem; color:black;"></i></a>
                             <a asp-action="Show" asp-route-idName="@item.Nazwa" asp-route-id="@item.ApartmentID"><i class="bi bi-zoom-in m-3" style="font-size: 1.5rem; color:black;"></i></a>
 @*                             <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline">
                                 @Html.AntiForgeryToken()
