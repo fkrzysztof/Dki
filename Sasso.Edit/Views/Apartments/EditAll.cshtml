@@ -1,14 +1,15 @@
 ﻿@model Sald.Data.Data.Data.Apartment
 @using Sald.Data.HelperClass
-
+@* 
 <script type="text/javascript">
     bkLib.onDomLoaded(function () { nicEditors.allTextAreas() });
-</script>
+</script> *@
 
 @{
     string descriptionAp = ViewBag.Description;
     string nameAp = ViewBag.Name;
     string lang = ViewBag.Lang;
+    string pdf = ViewBag.Pdf;
 }
 
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
@@ -161,77 +162,89 @@
 </form>
 
 
-<form asp-action="EditWebsiteLanguage" method="post">
+<form asp-action="EditWebsiteLanguage" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id" value="@Model.ApartmentID" />
     <input type="hidden" name="lang" value="@lang" />
+
     <div class="row mt-4">
         <div class="col-12 mt-4">
-            <h4 id="lang-editor">Tekst na stronie w wybranym języku</h4><hr />
+            <h4 id="lang-editor">Tekst na stronie w wybranym języku</h4>
+            <hr />
         </div>
+
         <div class="col-12 text-start">
-
-
             <div class="card text-center">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
                             <a class="nav-link lang-tab @(lang == "pl-PL" ? "active" : "")"
-                               aria-current="true"
                                href="@Url.Action("EditAll", "Apartments", new { id = Model.ApartmentID, lang = "pl-PL" })#lang-editor">
                                 Polski
                             </a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link lang-tab @(lang == "en-US" ? "active" : "")"
                                href="@Url.Action("EditAll", "Apartments", new { id = Model.ApartmentID, lang = "en-US" })#lang-editor">
                                 Angielski
                             </a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link lang-tab @(lang == "uk-UA" ? "active" : "")"
                                href="@Url.Action("EditAll", "Apartments", new { id = Model.ApartmentID, lang = "uk-UA" })#lang-editor">
                                 Ukraiński
                             </a>
                         </li>
-
                     </ul>
                 </div>
-                <div class="card-body">
-                    
 
+                <div class="card-body">
                     <div class="col-12 mb-3">
                         <div class="form-group">
-                            <label text-start my-4>Nazwa</label>
+                            <label>Nazwa</label>
                             <input name="name" class="form-control" value="@nameAp" />
-                           
                         </div>
+
                         <div class="form-group">
-                            <label text-start my-4>Opis</label>
-                            <textarea rows="35" name="description" class="form-control">@descriptionAp</textarea>
-
+                            <label>Opis</label>
+                            <textarea name="description" class="form-control">@descriptionAp</textarea>
                         </div>
+
+                        <div class="form-group">
+                            <label>PDF</label>
+                            <input type="file" name="FormFileItems" class="form-control" />
+
+                            @if (Model.PageContents != null && Model.PageContents.Any())
+                            {
+                                var pageContent = Model.PageContents.First();
+                                if (pageContent.PdfFileId != null)
+                                {
+                                    <p>
+                                        <a class="btn btn-sm btn-primary" target="_blank"
+                                           href="@Url.Action("DownloadPdf", "Apartments", new { id = pageContent.Id })">
+                                            Pobierz obecny PDF
+                                        </a>
+                                    </p>
+                                }
+                            }
+                        </div>
+
                         <div class="d-flex justify-content-start mt-3">
-                            <button type="submit" class="btn btn-primary">
-                                Zapisz zmiany
-                            </button>
+                            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
                         </div>
-
                     </div>
-
-                    
-                        
                 </div>
             </div>
-
-
         </div>
     </div>
 </form>
 
 
+
 @section Scripts {
+
+
+    <script src="~/app/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script src="~/js/my-editor.js"></script>
 
     <style>
         .preview-item {
@@ -285,6 +298,8 @@
         }
         
     </style>
+
+
 
     <script>
         // ================== Dopasowanie ikon X ==================

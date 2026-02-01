@@ -162,6 +162,9 @@
   <data name="description" xml:space="preserve">
     <value>Опис</value>
   </data>
+  <data name="downloadContract" xml:space="preserve">
+    <value>Завантажити договір</value>
+  </data>
   <data name="elevator" xml:space="preserve">
     <value>Ліфт</value>
   </data>

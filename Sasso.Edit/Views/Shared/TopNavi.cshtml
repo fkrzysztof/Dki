@@ -71,7 +71,7 @@
 
                 if (action == "Edytuj apartament")
                     {
-                        <a href="/Apartments/Show/3?idName=x"><i class="bi bi-zoom-in" style="font-size: 2.0rem; color:black;"></i></a>
+                    <a asp-action="Show" asp-route-token="@ViewBag.TokenPage"><i class="bi bi-zoom-in" style="font-size: 2.0rem; color:black;"></i></a>
 
                     }
                     if (action != "Create" && action != "Edit" && pageName != "About" && pageName != "Settings")

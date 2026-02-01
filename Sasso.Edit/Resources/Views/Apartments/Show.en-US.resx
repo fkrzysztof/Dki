@@ -162,6 +162,9 @@
   <data name="description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="downloadContract" xml:space="preserve">
+    <value>Download the contract</value>
+  </data>
   <data name="elevator" xml:space="preserve">
     <value>Elevator</value>
   </data>

@@ -38,12 +38,20 @@ namespace Sald.Data.Migrations
                     b.Property<string>("PageKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PdfContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PdfFileId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApartmentID");
+
+                    b.HasIndex("PdfFileId");
 
                     b.ToTable("PageContents");
                 });
@@ -319,6 +327,10 @@ namespace Sald.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Telefon2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Ulica")
@@ -669,7 +681,13 @@ namespace Sald.Data.Migrations
                         .WithMany("PageContents")
                         .HasForeignKey("ApartmentID");
 
+                    b.HasOne("Sasso.Data.Data.Data.MyFile", "PdfFile")
+                        .WithMany()
+                        .HasForeignKey("PdfFileId");
+
                     b.Navigation("Apartment");
+
+                    b.Navigation("PdfFile");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

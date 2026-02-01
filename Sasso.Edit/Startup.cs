@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using QuestPDF.Infrastructure;
 using Sasso.Data.Data;
 using Sasso.Data.Services;
 using System;
@@ -35,7 +36,9 @@ namespace Sasso.Edit
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");//localization
 
+
             services.AddControllersWithViews()
+
                 .AddViewLocalization()//localization
                 .AddDataAnnotationsLocalization();//localization
 
@@ -88,6 +91,7 @@ namespace Sasso.Edit
                 app.UseHsts();
             }
 
+            QuestPDF.Settings.License = LicenseType.Community;
 
 
             var localizationOptions = app.ApplicationServices

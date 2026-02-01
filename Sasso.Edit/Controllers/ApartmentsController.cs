@@ -1,27 +1,26 @@
 ﻿using Engine.Data.Data.Data;
+using Engine.Data.HelperClass;
 using Engine.Data.Services;
+using Engine.Edit.Helper;
 using Engine.Edit.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using QuestPDF.Fluent;
 using Sald.Data.Data.Data;
 using Sald.Data.HelperClass;
 using Sasso.Data.Data;
 using Sasso.Edit.Controllers;
 using Sasso.Edit.Controllers.Abstract;
-using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
+
 
 namespace Engine.Edit.Controllers
 {
@@ -33,12 +32,71 @@ namespace Engine.Edit.Controllers
         {
             _emailService = emailService;
         }
-        
+
+        //form txt
+        //public IActionResult DownloadPdf(int id, string lang)
+        //{
+        //    var page = _context.PageContents.FirstOrDefault(p => p.Id == id && p.Culture == lang);
+        //    if (page == null || string.IsNullOrWhiteSpace(page.PdfContent))
+        //        return NotFound();
+
+        //    var pdf = new PageContentPdf(page.PdfContent).GeneratePdf();
+        //    return File(pdf, "application/pdf", $"{page.Title}.pdf");
+        //}
+
+        public async Task<IActionResult> DownloadPdf(int id)
+        {
+            var pageContent = await _context.PageContents
+                .Include(p => p.PdfFile)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (pageContent == null || pageContent.PdfFile == null)
+                return NotFound();
+
+            return await FileAction.DownloadFile(pageContent.PdfFile);
+        }
+
+
+        private string GenerateUniqueToken()
+        {
+            string token;
+
+            do
+            {
+                token = TokenGenerator.GenerateToken();
+            }
+            while (_context.Apartments.Any(a => a.Token == token));
+
+            return token;
+        }
+
+        public bool FixMissingToken()
+        {
+            bool fixToken = false;
+            var apartments = _context.Apartments
+                .Where(a => string.IsNullOrEmpty(a.Token))
+                .ToList();
+
+            fixToken =  apartments.Any();
+
+            foreach (var apartment in apartments)
+            {
+                apartment.Token = GenerateUniqueToken();
+            }
+
+            _context.SaveChanges();
+
+            return fixToken;
+        }
+
+
         private static readonly string[] SupportedCultures =
         {
             "pl-PL", "en-US", "uk-UA"
         };
 
+        // Ta akcja jest dostępna dla wszystkich, nawet niezalogowanych
+        [AllowAnonymous]
         public IActionResult SetLanguage(string culture, string returnUrl)
         {
             if (!SupportedCultures.Contains(culture))
@@ -65,14 +123,17 @@ namespace Engine.Edit.Controllers
         [AllowAnonymous]
         // GET: Apartments
 
-        public IActionResult Show(string idName, int id)
+        public IActionResult Show(string token)
         {
+            if (string.IsNullOrEmpty(token))
+                return NotFound();
+
             var culture = CultureInfo.CurrentUICulture.Name;
 
             var apartment = _context.Apartments
                 .Include(a => a.Photos)
                 .Include(a => a.PageContents)
-                .FirstOrDefault(a => a.ApartmentID == id);
+                .FirstOrDefault(a => a.Token == token);
 
             if (apartment == null)
                 return NotFound();
@@ -105,6 +166,7 @@ namespace Engine.Edit.Controllers
     "Ulica,NumerBudynku,NumerMieszkania,Miasto,KodPocztowy,Kraj," +
     "Email,Telefon1,Telefon2")] Apartment apartment, IFormFile[] FormFileItems)
         {
+            apartment.Token = GenerateUniqueToken();
             if (!ModelState.IsValid)
                 return View(apartment);
 
@@ -223,6 +285,8 @@ namespace Engine.Edit.Controllers
             ViewBag.Description = content.Description;
             ViewBag.Name = content.Title;
             ViewBag.Lang = lang;
+            ViewBag.Pdf = content.PdfContent;
+            ViewBag.TokenPage = apartment.Token;
 
             // <-- aby ASP.NET Core nie nadpisywał wartości z ViewBag
             ModelState.Remove("name");
@@ -234,80 +298,134 @@ namespace Engine.Edit.Controllers
 
 
         //EditWebsiteLanguage
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> EditWebsiteLanguage(string name, string description, int id, string lang, IFormFile FormFileItems)
+        //{
+        //    var pageContent = await _context.PageContents
+        //        .FirstOrDefaultAsync(i => i.ApartmentID == id && i.Culture == lang);
+
+        //    if (pageContent == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            pageContent.Title = name;
+        //            pageContent.Description = description;
+        //            //pageContent.PdfContent = pdfContent;
+        //            _context.Update(pageContent);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!_context.Apartments.Any(e => e.ApartmentID == id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //    }
+
+        //    // Zawsze wracamy do EditAll, nawet jeśli ModelState był nieprawidłowy
+        //    return RedirectToAction("EditAll", new { id = id, lang = lang });
+        //}
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditWebsiteLanguage(string name, string description, int id, string lang)
+        public async Task<IActionResult> EditWebsiteLanguage(string name, string description, int id, string lang, IFormFile FormFileItems)
         {
             var pageContent = await _context.PageContents
+                .Include(p => p.PdfFile)
                 .FirstOrDefaultAsync(i => i.ApartmentID == id && i.Culture == lang);
 
             if (pageContent == null)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
-                try
+                pageContent.Title = name;
+                pageContent.Description = description;
+
+                // Upload PDF
+                if (FormFileItems != null)
                 {
-                    pageContent.Title = name;
-                    pageContent.Description = description;
-                    _context.Update(pageContent);
-                    await _context.SaveChangesAsync();
+                    if (pageContent.PdfFile != null)
+                        FileAction.RemoveFile(pageContent.PdfFile); // usuń stary PDF
+
+                    var uploadedFiles = await FileAction.UploadFiles(FormFileItems);
+                    
+                    pageContent.PdfFile = uploadedFiles.FirstOrDefault(); // przypisz nowy PDF
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Apartments.Any(e => e.ApartmentID == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+                _context.Update(pageContent);
+                await _context.SaveChangesAsync();
             }
 
-            // Zawsze wracamy do EditAll, nawet jeśli ModelState był nieprawidłowy
             return RedirectToAction("EditAll", new { id = id, lang = lang });
         }
+
 
 
         // POST: Apartments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, string lang, [Bind("ApartmentID,Opis,Nazwa,Pietro,LiczbaPieterWBudynku,Metraz,LiczbaPokoi,WcRazemZLazienka,Balkon,Winda,Piwnica,OgrzewaniePodlogowe,Klimatyzacja,Garaz,MiejsceParkingoweNaZewnatrz,Ogród,Taras,Ulica,NumerBudynku,NumerMieszkania,Miasto,KodPocztowy,Kraj,Email,Telefon1,Telefon2")] Apartment apartment)
+        public async Task<IActionResult> Edit(
+            int id,
+            string lang,
+            [Bind("ApartmentID,Token,Opis,Nazwa,Pietro,LiczbaPieterWBudynku,Metraz,LiczbaPokoi,WcRazemZLazienka,Balkon,Winda,Piwnica,OgrzewaniePodlogowe,Klimatyzacja,Garaz,MiejsceParkingoweNaZewnatrz,Ogrod,Taras,Ulica,NumerBudynku,NumerMieszkania,Miasto,KodPocztowy,Kraj,Email,Telefon1,Telefon2")]
+    Apartment input)
         {
-            if (id != apartment.ApartmentID)
-            {
-                return NotFound();
-            }
+            var apartment = await _context.Apartments
+                .FirstOrDefaultAsync(a => a.ApartmentID == id);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(apartment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ApartmentExists(apartment.ApartmentID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                //return RedirectToAction(nameof(Index));
-            }
-            //return View(apartment);
-            return RedirectToAction("EditAll", new { id = id, lang = lang });
+            if (apartment == null) return NotFound();
+
+            // Token zostaje nietknięty
+            var token = apartment.Token;
+
+            // 🔹 aktualizujesz tylko to, co wolno
+            apartment.Opis = input.Opis;
+            apartment.Nazwa = input.Nazwa;
+            apartment.Pietro = input.Pietro;
+            apartment.LiczbaPieterWBudynku = input.LiczbaPieterWBudynku;
+            apartment.Metraz = input.Metraz;
+            apartment.LiczbaPokoi = input.LiczbaPokoi;
+            apartment.WcRazemZLazienka = input.WcRazemZLazienka;
+            apartment.Balkon = input.Balkon;
+            apartment.Winda = input.Winda;
+            apartment.Piwnica = input.Piwnica;
+            apartment.OgrzewaniePodlogowe = input.OgrzewaniePodlogowe;
+            apartment.Klimatyzacja = input.Klimatyzacja;
+            apartment.Garaz = input.Garaz;
+            apartment.MiejsceParkingoweNaZewnatrz = input.MiejsceParkingoweNaZewnatrz;
+            apartment.Ogrod = input.Ogrod;
+            apartment.Taras = input.Taras;
+            apartment.Ulica = input.Ulica;
+            apartment.NumerBudynku = input.NumerBudynku;
+            apartment.NumerMieszkania = input.NumerMieszkania;
+            apartment.Miasto = input.Miasto;
+            apartment.KodPocztowy = input.KodPocztowy;
+            apartment.Kraj = input.Kraj;
+            apartment.Email = input.Email;
+            apartment.Telefon1 = input.Telefon1;
+            apartment.Telefon2 = input.Telefon2;
+
+            // ❗ Token zostaje nietknięty
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("EditAll", new { id, lang });
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

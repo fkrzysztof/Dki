@@ -23,20 +23,13 @@
                     </h5>
                     <hr>
                     <p class="text-center">
-                        @item.KodPocztowy, @item.Miasto  <br />
-                       @*  ID: @item.ApartmentID *@
+                        @item.KodPocztowy, @item.Miasto
+                        @* ID: @item.Token *@
                     </p>
                     <div class="row">
                         <div class="col-12 text-center">
                             <a asp-action="EditAll" asp-route-id="@item.ApartmentID" asp-route-lang="pl-PL"><i class="bi bi-sliders m-3" style="font-size: 1.5rem; color:black;"></i></a>
-                            <a asp-action="Show" asp-route-idName="@item.Nazwa" asp-route-id="@item.ApartmentID"><i class="bi bi-zoom-in m-3" style="font-size: 1.5rem; color:black;"></i></a>
-@*                             <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@item.ApartmentID" />
-                                <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
-                                    <i class="bi bi-x-circle m-3" style="font-size:1.5rem; color:red;"></i>
-                                </button>
-                            </form> *@
+                            <a asp-action="Show" asp-route-token="@item.Token"><i class="bi bi-zoom-in m-3" style="font-size: 1.5rem; color:black;"></i></a>
                             <form asp-action="Delete" asp-controller="Apartments" method="post" style="display:inline"
                                   onsubmit="return confirm('Czy na pewno chcesz usunąć ten apartament?');">
                                 @Html.AntiForgeryToken()

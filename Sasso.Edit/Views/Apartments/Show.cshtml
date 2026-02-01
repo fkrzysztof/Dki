@@ -245,7 +245,7 @@
                                    @*  <h4>Adres</h4> *@
                                     <h4>@Localizer["address"]</h4>
                                     <ul class="list-unstyled">
-                                        <li><strong>@Localizer["street"]:</strong> @Model.Ulica @Model.NumerBudynku/@Model.NumerMieszkania</li>
+                                        <li><strong>@Localizer["street"]:</strong> @Model.Ulica @Model.NumerBudynku @(string.IsNullOrEmpty(Model.NumerMieszkania) ? "" : "/" + Model.NumerMieszkania)</li>
                                         <li><strong>@Localizer["city"]:</strong> @Model.Miasto</li>
                                         <li><strong>@Localizer["zipCode"]:</strong> @Model.KodPocztowy</li>
                                         <li><strong>@Localizer["country"]:</strong> @Model.Kraj</li>
@@ -266,6 +266,39 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 animate-on-scroll slide-right">
+                            <div class="card card-apart">
+                                <div class="card-body">
+                                    @*  <h4>Pdf</h4> *@  
+                                    <h4>@Localizer["downloadContract"]</h4>
+                                    @if (content != null)
+                                    {
+                                        if (content.PdfFileId != null)
+                                        {
+                                            
+@*                                             <p>
+                                                <a class="btn btn-sm" target="_blank"
+                                                   href="@Url.Action("DownloadPdf", "Apartments", new { id = content.Id })">
+                                                    PDF
+                                                </a>
+                                            </p> *@
+
+                                            <div class="text-center">
+                                                <a target="_blank"
+                                                   href="@Url.Action("DownloadPdf", "Apartments", new { id = content.Id })">
+                                                    <img src="~/uploadfile/pdf_179483.png" style="width:25%;" />
+                                                </a>
+                                            </div>
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
                     </div>
                 </div>
             </div>
@@ -275,7 +308,7 @@
 </section>
 
 <section class="">
-    <div class="container text-center py-5  animate-on-scroll slide-left">
+    <div class="container text-center pt-0 pb-lg-4 pb-0  animate-on-scroll slide-left">
         @* <h3>Skontaktuj się z nami!</h3> *@
         <h3>@Localizer["contactAs"]</h3>
        @*  <p>Zapytaj o apartament lub umów się na wizytę.</p> *@
@@ -367,7 +400,12 @@
 
 
 
-                        <img src="@qrUrl" alt="QR kod" style="width: 100%; height: 100%; object-fit: cover;" />
+                       @*  <img src="@qrUrl" alt="QR kod" style="width: 100%; height: 100%; object-fit: cover;" /> *@
+                        @{
+                            var qrtoUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
+                        }
+
+                        <img src="@Url.Action("Generate", "QR", new { url = qrtoUrl })" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" />
 
                     
                     </div>
