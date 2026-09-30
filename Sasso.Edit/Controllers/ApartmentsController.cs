@@ -170,11 +170,34 @@ namespace Engine.Edit.Controllers
             if (!ModelState.IsValid)
                 return View(apartment);
 
+
+
             // ===============================
             // 1. Dodaj Apartament do bazy
             // ===============================
             _context.Add(apartment);
             await _context.SaveChangesAsync(); // zapis, aby uzyskać ApartmentID dla zdjęć
+
+
+
+            var cultures = new[] { "pl-PL", "en-US", "uk-UA" };
+
+            foreach (var culture in cultures)
+            {
+                var content = new PageContent
+                {
+                    ApartmentID = apartment.ApartmentID,
+                    PageKey = "Apartment",
+                    Culture = culture,
+                    Title = culture == "pl-PL" ? apartment.Nazwa : "",
+                    Description = culture == "pl-PL" ? apartment.Opis : ""
+                };
+
+                _context.PageContents.Add(content);
+            }
+
+            await _context.SaveChangesAsync();
+
 
             // ===============================
             // 2. Obsługa zdjęć
@@ -478,35 +501,78 @@ namespace Engine.Edit.Controllers
 
 
         //USUWANIE APARTAMENTU I ZDJEC
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    // Znajdź apartament w bazie wraz ze zdjęciami
+        //    var apartment = await _context.Apartments
+        //        .Include(a => a.Photos) // wczytujemy powiązane zdjęcia
+        //        .FirstOrDefaultAsync(a => a.ApartmentID == id);
+
+        //    if (apartment == null)
+        //        return NotFound();
+
+        //    // Usuń wszystkie pliki z dysku
+        //    if (apartment.Photos != null && apartment.Photos.Any())
+        //    {
+        //        FileAction.RemoveFile(apartment.Photos);
+        //    }
+
+        //    // Usuń rekordy zdjęć z bazy
+        //    _context.MyFiles.RemoveRange(apartment.Photos);
+
+        //    // Usuń apartament
+        //    _context.Apartments.Remove(apartment);
+
+        //    await _context.SaveChangesAsync();
+
+        //    // Możesz zwrócić redirect albo JSON jeśli chcesz AJAX
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //USUWANIE APARTAMENTU I ZDJEC
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            // Znajdź apartament w bazie wraz ze zdjęciami
+            // Znajdź apartament wraz ze zdjęciami
             var apartment = await _context.Apartments
-                .Include(a => a.Photos) // wczytujemy powiązane zdjęcia
+                .Include(a => a.Photos)
                 .FirstOrDefaultAsync(a => a.ApartmentID == id);
 
             if (apartment == null)
                 return NotFound();
 
-            // Usuń wszystkie pliki z dysku
+            // Usuń wszystkie pliki zdjęć z dysku
             if (apartment.Photos != null && apartment.Photos.Any())
             {
                 FileAction.RemoveFile(apartment.Photos);
             }
 
             // Usuń rekordy zdjęć z bazy
-            _context.MyFiles.RemoveRange(apartment.Photos);
+            if (apartment.Photos != null && apartment.Photos.Any())
+            {
+                _context.MyFiles.RemoveRange(apartment.Photos);
+            }
+
+            // Usuń PageContents powiązane z apartamentem
+            var pageContents = await _context.PageContents
+                .Where(p => p.ApartmentID == id)
+                .ToListAsync();
+
+            _context.PageContents.RemoveRange(pageContents);
 
             // Usuń apartament
             _context.Apartments.Remove(apartment);
 
             await _context.SaveChangesAsync();
 
-            // Możesz zwrócić redirect albo JSON jeśli chcesz AJAX
             return RedirectToAction(nameof(Index));
         }
+
 
         [HttpPost]
         public IActionResult SendMail(string Name, string Email, string Phone, string Message, string id)

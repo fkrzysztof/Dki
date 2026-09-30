@@ -13,7 +13,7 @@ namespace Sald.Data.Data.Data
         [Key]
         public int ApartmentID { get; set; }
 
-        [Required]
+        
         public string Token { get; set; }
 
         //Opis
